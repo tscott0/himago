@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"image"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -47,6 +48,7 @@ func getImage(url string) (image.Image, error) {
 
 	response, err := http.Get(url)
 	if err != nil {
+		fmt.Println(err)
 		return nil, errors.New("Failed to get image from: " + url)
 	}
 
@@ -108,42 +110,84 @@ var (
 	cropStart xy
 	imageTime satTime
 	zoom      int
-	outImg    image.Image
+	outImg    draw.Image
 )
 
-func getTiles() ([]image.Image, error) {
-
-	xTiles, yTiles := 2 ^ (zoom - 1)
+func getTiles() ([][]image.Image, error) {
+	// Zoom level   Grid
+	// 1            1x1
+	// 2            2x2
+	// 3            4x4
+	// 4            8x8
+	// 5            16x16
+	gridWidth := int(math.Pow(2, float64(zoom-1)))
+	fmt.Printf("gridWidth:%v", gridWidth)
 
 	// Make an array of images big enough to store all the tiles
-	tiles := make([]image.Image, xTiles*yTiles, xTiles*yTiles)
-	tileIdx := 0
+	tiles := [][]image.Image{}
 
-	for j := 0; j < yTiles; j++ {
-		for i := 0; i < xTiles; i++ {
+	for j := 0; j < gridWidth; j++ {
+		row := []image.Image{}
+		for i := 0; i < gridWidth; i++ {
+			fmt.Printf("j:%v  i:%v\n", j, i)
 			// TODO: fix zero-padding on numbers with fmt.Sprintf
-			url := fmt.Sprintf("URL = http://himawari8-dl.nict.go.jp/himawari8/img/D531106/2d/550/%v/%v/%v/%v%v00_%v_%v.png",
+			url := fmt.Sprintf("http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png",
+				gridWidth,
 				*imageTime.year,
 				*imageTime.month,
 				*imageTime.day,
-				19,
+				03,
 				00,
-				i,
-				j)
+				j,
+				i)
 
 			fmt.Println(url)
 
 			tile, err := getImage(url)
 			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
+				return tiles, err
 			}
 
 			// Add the tile to the array
-			tiles[tileIdx] = tile
+			row = append(row, tile)
+		}
+		tiles = append(tiles, row)
+	}
+
+	return tiles, nil
+
+}
+
+func drawTiles(tiles [][]image.Image) error {
+	outFile, err := os.Create("./output.png")
+	if err != nil {
+		return err
+	}
+
+	w := 550
+
+	// Assume images are always square
+	gridWidth := len(tiles)
+
+	outImg = image.NewRGBA(image.Rect(0, 0, gridWidth*w, gridWidth*w))
+
+	// Black background
+	draw.Draw(outImg, outImg.Bounds(), image.White, image.ZP, draw.Src)
+
+	for x := 0; x < gridWidth; x++ {
+		for y := 0; y < gridWidth; y++ {
+			draw.Draw(outImg, image.Rect(x*w, y*w, (x+1)*w, (y+1)*w), tiles[x][y], image.ZP, draw.Src)
 		}
 	}
 
+	err = png.Encode(outFile, outImg)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Generated image to output.png \n")
+
+	return nil
 }
 
 func init() {
@@ -151,7 +195,7 @@ func init() {
 
 	flag.Var(&cropSize, "cropSize", "Dimensions of the cropped image in the form <width>x<height>")
 	flag.Var(&cropStart, "cropStart", "Start point for cropping to cropSize in the form <xcoord>x<ycoord>")
-	flag.IntVar(&zoom, 2, "Zoom factor 1-5")
+	flag.IntVar(&zoom, "zoom", 2, "Zoom factor 1-5")
 	imageTime.year = flag.Int("year", now.Year(), "Year of the image.")
 	imageTime.month = flag.Int("month", int(now.Month()), "Month of the image.")
 	imageTime.day = flag.Int("day", now.Day(), "Day of the image.")
@@ -164,26 +208,16 @@ func main() {
 
 	flag.Parse()
 
-	outFile, err := os.Create("./output.png")
+	tiles, err := getTiles()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	outImg = image.NewRGBA(image.Rect(0, 0, 1100, 550))
-	draw.Draw(outImg, outImg.Bounds(), image.Black, image.ZP, draw.Src)
-
-	//m := readImage("221000_0_0.png")
-	//draw.Draw(outImg, image.Rect(0, 0, 550, 550), m, image.ZP, draw.Src)
-
-	//b := readImage("221000_1_0.png")
-	draw.Draw(outImg, image.Rect(550, 0, 1100, 550), b, image.ZP, draw.Src)
-
-	err = png.Encode(outFile, outImg)
+	err = drawTiles(tiles)
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		os.Exit(2)
 	}
 
-	fmt.Println("Generated image to output.png \n")
 }
