@@ -10,16 +10,16 @@
 * Remove globals
 * Reorder types, functions, vars
 * Unit tests
-** readImage to test drawing with local files
+ * readImage to test drawing with local files
 * Debug logging mode?
 * Consistent use of terminology: A tile is drawn to produce an image
 * Cropping functionality
-** Just crop image before writing
-** Improve by skipping downloads for images that aren't needed.
+ * Just crop image before writing
+ * Improve by skipping downloads for images that aren't needed.
 * Create helper for URL construction (unit tested)
 * Measure performance
 * Percentage completion in-line?
-* Download speeds
+* Download speed in-line
 * Summarise output image: location, file size, dimensions, format, cropping?
 * --help override? If possible, add examples.
 * Reorder flags
