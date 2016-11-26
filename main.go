@@ -6,53 +6,30 @@ import (
 	"flag"
 	"fmt"
 	"image"
-	"log"
+	"image/draw"
+	"image/png"
 	"math"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
-
-	"image/draw"
-	"image/png"
-	// _ "image/jpeg"
 )
 
-//func stitch(x int, y int, images []image.Image) {
-//for _, img := range images {
-
-//}
-//}
-
-func readImage(img string) image.Image {
-	reader, err := os.Open(img)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer reader.Close()
-	//reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(data))
-	m, _, err := image.Decode(reader)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	bounds := m.Bounds()
-	fmt.Printf("%v: %vx%v\n", img, bounds.Max.X, bounds.Max.Y)
-
-	return m
-}
-
-func getImage(url string) (image.Image, error) {
+func getTile(url string) (image.Image, error) {
 	fmt.Printf("Downloading %v\n", url)
 
 	response, err := http.Get(url)
 	if err != nil {
-		fmt.Println(err)
 		return nil, errors.New("Failed to get image from: " + url)
 	}
 
-	defer response.Body.Close()
+	defer func() {
+		err := response.Body.Close()
+		if err != nil {
+			fmt.Println("Failed to close response body")
+		}
+	}()
 
 	newImg, _, err := image.Decode(response.Body)
 	if err != nil {
@@ -121,16 +98,12 @@ func getTiles() ([][]image.Image, error) {
 	// 4            8x8
 	// 5            16x16
 	gridWidth := int(math.Pow(2, float64(zoom-1)))
-	fmt.Printf("gridWidth:%v", gridWidth)
 
-	// Make an array of images big enough to store all the tiles
 	tiles := [][]image.Image{}
 
 	for j := 0; j < gridWidth; j++ {
 		row := []image.Image{}
 		for i := 0; i < gridWidth; i++ {
-			fmt.Printf("j:%v  i:%v\n", j, i)
-			// TODO: fix zero-padding on numbers with fmt.Sprintf
 			url := fmt.Sprintf("http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png",
 				gridWidth,
 				*imageTime.year,
@@ -141,9 +114,7 @@ func getTiles() ([][]image.Image, error) {
 				j,
 				i)
 
-			fmt.Println(url)
-
-			tile, err := getImage(url)
+			tile, err := getTile(url)
 			if err != nil {
 				return tiles, err
 			}
@@ -185,7 +156,7 @@ func drawTiles(tiles [][]image.Image) error {
 		return err
 	}
 
-	fmt.Println("Generated image to output.png \n")
+	fmt.Println("Generated image to output.png")
 
 	return nil
 }
