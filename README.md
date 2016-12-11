@@ -1,5 +1,7 @@
 
 # TODO
+* Restructure into library + command line tool
+* Remove globals
 * Support for JPEG output
 * Custom output file name
 * Option to save intermediate images
@@ -10,12 +12,12 @@
 * Remove globals
 * Reorder types, functions, vars
 * Unit tests
-** readImage to test drawing with local files
+  * readImage to test drawing with local files
 * Debug logging mode?
 * Consistent use of terminology: A tile is drawn to produce an image
 * Cropping functionality
-** Just crop image before writing
-** Improve by skipping downloads for images that aren't needed.
+  * Just crop image before writing
+  * Improve by skipping downloads for images that aren't needed.
 * Create helper for URL construction (unit tested)
 * Measure performance
 * Percentage completion in-line?

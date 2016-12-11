@@ -1,9 +1,10 @@
-// This example demonstrates decoding a JPEG image and examining its pixels.
-package main
+// Package himago provides functions to download images ultimately coming from the
+// Himawari 8 satellite. Multiple smaller images, referred to as tiles, are stitched
+// together to produce a single large image.
+package himago
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"image"
 	"image/draw"
@@ -11,11 +12,11 @@ import (
 	"math"
 	"net/http"
 	"os"
-	"strconv"
-	"strings"
-	"time"
 )
 
+// getTile will send a GET request to url and decode the response into an image
+// using image.Decode.
+// It returns an image.Image and any error encountered.
 func getTile(url string) (image.Image, error) {
 	fmt.Printf("Downloading %v\n", url)
 
@@ -37,41 +38,6 @@ func getTile(url string) (image.Image, error) {
 	}
 
 	return newImg, nil
-}
-
-type xy struct {
-	X int
-	Y int
-}
-
-func (coord *xy) String() string {
-	return fmt.Sprintf("%vx%v", coord.X, coord.Y)
-}
-
-func (coord *xy) Set(value string) error {
-	value = strings.ToLower(value)
-	coords := strings.Split(value, "x")
-
-	if len(coords) != 2 {
-		return errors.New("Invalid coordinates.")
-	}
-
-	var err error
-	coord.X, err = strconv.Atoi(coords[0])
-	if err != nil {
-		return errors.New("X was an invalid number. Received: " + value)
-	}
-
-	coord.Y, err = strconv.Atoi(coords[1])
-	if err != nil {
-		return errors.New("Y was an invalid number. Received: " + value)
-	}
-
-	if coord.X < 0 || coord.Y < 0 {
-		return errors.New("Coordinates cannot be negative.")
-	}
-
-	return nil
 }
 
 type satTime struct {
@@ -159,36 +125,4 @@ func drawTiles(tiles [][]image.Image) error {
 	fmt.Println("Generated image to output.png")
 
 	return nil
-}
-
-func init() {
-	now := time.Now()
-
-	flag.Var(&cropSize, "cropSize", "Dimensions of the cropped image in the form <width>x<height>")
-	flag.Var(&cropStart, "cropStart", "Start point for cropping to cropSize in the form <xcoord>x<ycoord>")
-	flag.IntVar(&zoom, "zoom", 2, "Zoom factor 1-5")
-	imageTime.year = flag.Int("year", now.Year(), "Year of the image.")
-	imageTime.month = flag.Int("month", int(now.Month()), "Month of the image.")
-	imageTime.day = flag.Int("day", now.Day(), "Day of the image.")
-	imageTime.hour = flag.Int("hour", now.Hour(), "Hour of the image.")
-	imageTime.minute = flag.Int("minute", now.Minute(), "Minute of the image.")
-
-}
-
-func main() {
-
-	flag.Parse()
-
-	tiles, err := getTiles()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	err = drawTiles(tiles)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(2)
-	}
-
 }
