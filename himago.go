@@ -14,15 +14,10 @@ import (
 	"os"
 )
 
-type Xy struct {
-	X int
-	Y int
-}
-
 // getTile will send a GET request to url and decode the response into an image
 // using image.Decode.
 // It returns an image.Image and any error encountered.
-func getTile(url string) (image.Image, error) {
+func GetTile(url string) (image.Image, error) {
 	fmt.Printf("Downloading %v\n", url)
 
 	response, err := http.Get(url)
@@ -45,15 +40,16 @@ func getTile(url string) (image.Image, error) {
 	return newImg, nil
 }
 
-type satTime struct {
-	year   *int
-	month  *int
-	day    *int
-	hour   *int
-	minute *int
+// SatTime is a defines time to minute precision.
+type SatTime struct {
+	Year   *int
+	Month  *int
+	Day    *int
+	Hour   *int
+	Minute *int
 }
 
-func getTiles(zoom int, imageTime satTime) ([][]image.Image, error) {
+func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 	// Zoom level   Grid
 	// 1            1x1
 	// 2            2x2
@@ -69,15 +65,15 @@ func getTiles(zoom int, imageTime satTime) ([][]image.Image, error) {
 		for i := 0; i < gridWidth; i++ {
 			url := fmt.Sprintf("http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png",
 				gridWidth,
-				*imageTime.year,
-				*imageTime.month,
-				*imageTime.day,
+				*imageTime.Year,
+				*imageTime.Month,
+				*imageTime.Day,
 				03,
 				00,
 				j,
 				i)
 
-			tile, err := getTile(url)
+			tile, err := GetTile(url)
 			if err != nil {
 				return tiles, err
 			}
@@ -92,7 +88,7 @@ func getTiles(zoom int, imageTime satTime) ([][]image.Image, error) {
 
 }
 
-func drawTiles(tiles [][]image.Image, outImg draw.Image) error {
+func DrawTiles(tiles [][]image.Image, outImg draw.Image) error {
 	outFile, err := os.Create("./output.png")
 	if err != nil {
 		return err
