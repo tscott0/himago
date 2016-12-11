@@ -21,7 +21,7 @@
 * Create helper for URL construction (unit tested)
 * Measure performance
 * Percentage completion in-line?
-* Download speeds
+* Download speed in-line
 * Summarise output image: location, file size, dimensions, format, cropping?
 * --help override? If possible, add examples.
 * Reorder flags
