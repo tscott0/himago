@@ -14,7 +14,7 @@ import (
 	"os"
 )
 
-type xy struct {
+type Xy struct {
 	X int
 	Y int
 }
