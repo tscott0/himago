@@ -1,6 +1,6 @@
 
 # TODO
-* Restructure into library + command line tool
+* ~~Restructure into library + command line tool~~
 * Remove globals
 * Support for JPEG output
 * Custom output file name
