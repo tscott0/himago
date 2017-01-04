@@ -38,15 +38,15 @@ Zoom  Grid   Resolution
 
 ## TODO
 * ~~Restructure into library + command line tool~~
+* Handling of "No Image" images
+  * 14:40 often has these or times in the near future. Attempt rolling back 10mins at a time.
+* Use the current time to nearest 10m (currently only to nearest hour)
+* 404 should fail but be handled better
 * Remove globals
 * Support for JPEG output
 * Custom output file name
 * Option to save intermediate images
-* Handling of "No Image" images (14:40 often has these)
-* Use the current time to nearest 10m
-* If using current time and get a 404, roll back 10mins and try again (max rollbacks?)
 * Comments
-* Remove globals
 * Reorder types, functions, vars
 * Unit tests
   * readImage to test drawing with local files
@@ -56,6 +56,8 @@ Zoom  Grid   Resolution
   * Just crop image before writing
   * Improve by skipping downloads for images that aren't needed.
 * Create helper for URL construction (unit tested)
+  * 404 error test
+  * No Image test
 * Measure performance
 * Percentage completion in-line?
 * Download speed in-line

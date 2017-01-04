@@ -58,17 +58,19 @@ func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 	// 5            16x16
 	gridWidth := int(math.Pow(2, float64(zoom-1)))
 
+	urlString := "http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
+
 	tiles := [][]image.Image{}
 
 	for j := 0; j < gridWidth; j++ {
 		row := []image.Image{}
 		for i := 0; i < gridWidth; i++ {
-			url := fmt.Sprintf("http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png",
+			url := fmt.Sprintf(urlString,
 				gridWidth,
 				*imageTime.Year,
 				*imageTime.Month,
 				*imageTime.Day,
-				03,
+				*imageTime.Hour,
 				00,
 				j,
 				i)
@@ -115,7 +117,7 @@ func DrawTiles(tiles [][]image.Image, outImg draw.Image) error {
 		return err
 	}
 
-	fmt.Println("Generated image to output.png")
+	fmt.Println("Saved to output.png")
 
 	return nil
 }

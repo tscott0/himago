@@ -22,9 +22,12 @@ var (
 func init() {
 	now := time.Now()
 
-	flag.Var(&cropSize, "cropSize", "Dimensions of the cropped image in the form <width>x<height>")
-	flag.Var(&cropStart, "cropStart", "Start point for cropping to cropSize in the form <xcoord>x<ycoord>")
-	flag.IntVar(&zoom, "zoom", 2, "Zoom factor 1-5")
+	flag.Var(&cropSize, "cropSize",
+		"Dimensions of the cropped image in the form <width>x<height>")
+	flag.Var(&cropStart, "cropStart",
+		"Start point for cropping to cropSize in the form <xcoord>x<ycoord>")
+	flag.IntVar(&zoom, "zoom", 2,
+		"Zoom factor 1-5")
 
 	imageTime.Year = flag.Int("year", now.Year(), "Year of the image.")
 	imageTime.Month = flag.Int("month", int(now.Month()), "Month of the image.")
