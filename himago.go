@@ -40,15 +40,6 @@ func GetTile(url string) (image.Image, error) {
 	return newImg, nil
 }
 
-// SatTime is a defines time to minute precision.
-type SatTime struct {
-	Year   *int
-	Month  *int
-	Day    *int
-	Hour   *int
-	Minute *int
-}
-
 func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 	// Zoom level   Grid
 	// 1            1x1
@@ -62,6 +53,8 @@ func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 
 	tiles := [][]image.Image{}
 
+	imageTime.Round()
+
 	for j := 0; j < gridWidth; j++ {
 		row := []image.Image{}
 		for i := 0; i < gridWidth; i++ {
@@ -71,7 +64,7 @@ func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 				*imageTime.Month,
 				*imageTime.Day,
 				*imageTime.Hour,
-				00,
+				*imageTime.Minute,
 				j,
 				i)
 

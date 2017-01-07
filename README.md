@@ -38,8 +38,10 @@ Zoom  Grid   Resolution
 
 ## TODO
 * ~~Restructure into library + command line tool~~
+* Create Tile type on top of image.Image to created methods on it
 * Handling of "No Image" images
   * 14:40 often has these or times in the near future. Attempt rolling back 10mins at a time.
+  * Could check hash of image
 * Use the current time to nearest 10m (currently only to nearest hour)
 * 404 should fail but be handled better
 * Remove globals
