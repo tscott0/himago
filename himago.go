@@ -4,11 +4,14 @@
 package himago
 
 import (
+	"bytes"
+	"crypto/md5"
 	"errors"
 	"fmt"
 	"image"
 	"image/draw"
 	"image/png"
+	"io/ioutil"
 	"math"
 	"net/http"
 	"os"
@@ -17,12 +20,13 @@ import (
 // getTile will send a GET request to url and decode the response into an image
 // using image.Decode.
 // It returns an image.Image and any error encountered.
-func GetTile(url string) (image.Image, error) {
+func GetTile(url string) (Tile, error) {
 	fmt.Printf("Downloading %v\n", url)
+	var tile Tile
 
 	response, err := http.Get(url)
 	if err != nil {
-		return nil, errors.New("Failed to get image from: " + url)
+		return tile, errors.New("Failed to get image from: " + url)
 	}
 
 	defer func() {
@@ -32,15 +36,27 @@ func GetTile(url string) (image.Image, error) {
 		}
 	}()
 
-	newImg, _, err := image.Decode(response.Body)
+	// Extract the response body so we can hash it
+	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, errors.New("Failed to read decode image from url: " + url)
+		return tile, errors.New("Failed to read image body")
 	}
 
-	return newImg, nil
+	// Store the hex md5sum
+	md5 := fmt.Sprintf("%x", md5.Sum(body))
+
+	//newImg, _, err := image.Decode(response.Body)
+	newImg, _, err := image.Decode(bytes.NewReader(body))
+	if err != nil {
+		return tile, errors.New("Failed to read decode image from url: " + url)
+	}
+
+	// Finally wrap the image.Image in a Tile and return it
+	tile = Tile{newImg, md5}
+	return tile, nil
 }
 
-func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
+func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
 	// Zoom level   Grid
 	// 1            1x1
 	// 2            2x2
@@ -51,12 +67,12 @@ func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 
 	urlString := "http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
 
-	tiles := [][]image.Image{}
+	tiles := [][]Tile{}
 
 	imageTime.Round()
 
 	for j := 0; j < gridWidth; j++ {
-		row := []image.Image{}
+		row := []Tile{}
 		for i := 0; i < gridWidth; i++ {
 			url := fmt.Sprintf(urlString,
 				gridWidth,
@@ -64,11 +80,17 @@ func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 				*imageTime.Month,
 				*imageTime.Day,
 				*imageTime.Hour,
+				//00,
 				*imageTime.Minute,
 				j,
 				i)
 
 			tile, err := GetTile(url)
+
+			if tile.IsNoImage() {
+				fmt.Println("OMG, I've found one!")
+			}
+
 			if err != nil {
 				return tiles, err
 			}
@@ -83,7 +105,7 @@ func GetTiles(zoom int, imageTime SatTime) ([][]image.Image, error) {
 
 }
 
-func DrawTiles(tiles [][]image.Image, outImg draw.Image) error {
+func DrawTiles(tiles [][]Tile, outImg draw.Image) error {
 	outFile, err := os.Create("./output.png")
 	if err != nil {
 		return err
@@ -101,7 +123,7 @@ func DrawTiles(tiles [][]image.Image, outImg draw.Image) error {
 
 	for x := 0; x < gridWidth; x++ {
 		for y := 0; y < gridWidth; y++ {
-			draw.Draw(outImg, image.Rect(x*w, y*w, (x+1)*w, (y+1)*w), tiles[x][y], image.ZP, draw.Src)
+			draw.Draw(outImg, image.Rect(x*w, y*w, (x+1)*w, (y+1)*w), image.Image(tiles[x][y]), image.ZP, draw.Src)
 		}
 	}
 
