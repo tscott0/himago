@@ -38,11 +38,13 @@ Zoom  Grid   Resolution
 
 ## TODO
 * ~~Restructure into library + command line tool~~
-* Create Tile type on top of image.Image to created methods on it
+* Create Tile type on top of image.Image to create methods on it
+* ~~Use the current time to nearest 10m (currently only to nearest hour)~~
 * Handling of "No Image" images
-  * 14:40 often has these or times in the near future. Attempt rolling back 10mins at a time.
-  * Could check hash of image
-* Use the current time to nearest 10m (currently only to nearest hour)
+  * ~~Could check hash of image~~ Now checks md5 for "No Image"
+  * ~~Attempt rolling back 10mins at a time.~~
+  * Tune rollback attempts. Currently set to 3.
+  * Pass number of attempts on the command line.
 * 404 should fail but be handled better
 * Remove globals
 * Support for JPEG output

@@ -56,47 +56,84 @@ func GetTile(url string) (Tile, error) {
 	return tile, nil
 }
 
-func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
-	// Zoom level   Grid
-	// 1            1x1
-	// 2            2x2
-	// 3            4x4
-	// 4            8x8
-	// 5            16x16
-	gridWidth := int(math.Pow(2, float64(zoom-1)))
-
+// Take a SatTime and construct a URL.
+// Assumes that the time is valid.
+func urlFromSatTime(t SatTime, gridWidth, i, j int) string {
 	urlString := "http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
+
+	return fmt.Sprintf(urlString,
+		gridWidth,
+		t.Year(),
+		int(t.Month()),
+		t.Day(),
+		t.Hour(),
+		t.Minute(),
+		//00,
+		j,
+		i)
+
+}
+
+// Retrieve all the individual tiles to construct an image at the
+// required zoom.
+// Tiles are always the same size: 550x550 pixels
+// A higher zoom will require more tiles to be downloaded and will
+// produce a higher resolution image.
+//
+// Zoom  Grid   Resolution
+// 1     1x1    550  x 550
+// 2     2x2    1100 x 1100
+// 3     4x4    2200 x 2200
+// 4     8x8    4400 x 4400
+// 5     16x16  8800 x 8800
+func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
+	gridWidth := int(math.Pow(2, float64(zoom-1)))
 
 	tiles := [][]Tile{}
 
+	// Round down to the nearest 10 minutes
 	imageTime.Round()
+
+	// On attempting to download the first tile for an image,
+	// if a "No Image" is detected then roll back 10 minutes
+	// and try again. Try 3 times and then error.
+	firstTile := true
+	remainingRollbacks := 3
 
 	for j := 0; j < gridWidth; j++ {
 		row := []Tile{}
 		for i := 0; i < gridWidth; i++ {
-			url := fmt.Sprintf(urlString,
-				gridWidth,
-				*imageTime.Year,
-				*imageTime.Month,
-				*imageTime.Day,
-				*imageTime.Hour,
-				//00,
-				*imageTime.Minute,
-				j,
-				i)
 
+			url := urlFromSatTime(imageTime, gridWidth, i, j)
 			tile, err := GetTile(url)
-
-			if tile.IsNoImage() {
-				fmt.Println("OMG, I've found one!")
-			}
 
 			if err != nil {
 				return tiles, err
 			}
 
+			// Only perform rollback check on the first tile.
+			// Assumes all tiles to be "No Image" if the first one is.
+			if firstTile {
+				for remainingRollbacks > 0 {
+					if tile.IsNoImage() {
+						fmt.Println("OMG, I've found one!")
+						imageTime.Rollback()
+
+						// Regenerate the URL will the new time
+						url = urlFromSatTime(imageTime, gridWidth, i, j)
+						tile, err = GetTile(url)
+
+						if err != nil {
+							return tiles, err
+						}
+					}
+					remainingRollbacks--
+				}
+			}
+
 			// Add the tile to the array
 			row = append(row, tile)
+			firstTile = false
 		}
 		tiles = append(tiles, row)
 	}

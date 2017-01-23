@@ -16,14 +16,14 @@ type Xy struct {
 
 // Outputs Xy as two integers separated by an "x" e.g. 100x40
 // This is the same format that Set accepts as input.
-func (coord *Xy) String() string {
-	return fmt.Sprintf("%vx%v", coord.X, coord.Y)
+func (c *Xy) String() string {
+	return fmt.Sprintf("%vx%v", c.X, c.Y)
 }
 
 // Set accepts two integers separated by an "x" e.g. 100x40
 // It then sets the values of X and Y.
 // Implements the flag.Value interface.
-func (coord *Xy) Set(value string) error {
+func (c *Xy) Set(value string) error {
 	value = strings.ToLower(value)
 	coords := strings.Split(value, "x")
 
@@ -32,17 +32,17 @@ func (coord *Xy) Set(value string) error {
 	}
 
 	var err error
-	coord.X, err = strconv.Atoi(coords[0])
+	c.X, err = strconv.Atoi(coords[0])
 	if err != nil {
 		return errors.New("X was an invalid number. Received: " + value)
 	}
 
-	coord.Y, err = strconv.Atoi(coords[1])
+	c.Y, err = strconv.Atoi(coords[1])
 	if err != nil {
 		return errors.New("Y was an invalid number. Received: " + value)
 	}
 
-	if coord.X < 0 || coord.Y < 0 {
+	if c.X < 0 || c.Y < 0 {
 		return errors.New("Coordinates cannot be negative.")
 	}
 

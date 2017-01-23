@@ -29,12 +29,17 @@ func init() {
 	flag.IntVar(&zoom, "zoom", 2,
 		"Zoom level 1-5")
 
-	imageTime.Year = flag.Int("year", now.Year(), "Year of the image.")
-	imageTime.Month = flag.Int("month", int(now.Month()), "Month of the image.")
-	imageTime.Day = flag.Int("day", now.Day(), "Day of the image.")
-	imageTime.Hour = flag.Int("hour", now.Hour(), "Hour of the image.")
-	imageTime.Minute = flag.Int("minute", now.Minute(), "Minute of the image.")
-
+	year := flag.Int("year", now.Year(), "Year of the image.")
+	month := flag.Int("month", int(now.Month()), "Month of the image.")
+	day := flag.Int("day", now.Day(), "Day of the image.")
+	hour := flag.Int("hour", now.Hour(), "Hour of the image.")
+	min := flag.Int("minute", now.Minute(), "Minute of the image.")
+	// Construct a new time using the current time as the default.
+	// Override with values passed on the command line.
+	imageTime = himago.SatTime{
+		time.Date(*year, time.Month(*month), *day, *hour, *min,
+			0, 0, time.UTC),
+	}
 }
 
 func main() {
