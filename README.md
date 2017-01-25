@@ -29,42 +29,39 @@ Zoom  Grid   Resolution
 *Default zoom is 2*
 
 ### Considerations
-* Bandwidth
+* Bandwidth: The [JMA](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency) have made generously made these images freely available. While this tool might be useful for wallpapers, please don't abuse it by downloading hi-resolution images regularly. Please use responsinbly
+
+## Examples
+<img src="http://i.imgur.com/w8dfDX5.jpg" width="50%"><img src="http://i.imgur.com/G5dK3YD.png" width="50%">
+
+## Acknowledgements
+* [Japan Meteorological Agency](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency)
+* [NICT](https://www.nict.go.jp/en/about/)
+* [Michael Pote](https://github.com/MichaelPote) created a [script](https://gist.github.com/MichaelPote/92fa6e65eacf26219022) that inspired many similar tools like this.
+* [Jacob Kelley](https://github.com/jakiestfu) for his excellent work on [himawari.js](https://github.com/jakiestfu/himawari.js)
 
 ## Known issues
-* Colour
-* "No Image"
-
+* Unrealistic colours: According to [Wikipedia](https://en.wikipedia.org/wiki/Himawari_8), the images returned are true-colour. Looking at the colour of Australia, in particular, the colours don't look accurate. Correcting the colour to make it appear more natural looks complicated.
 
 ## TODO
-* ~~Restructure into library + command line tool~~
-* Create Tile type on top of image.Image to create methods on it
-* ~~Use the current time to nearest 10m (currently only to nearest hour)~~
 * Handling of "No Image" images
   * ~~Could check hash of image~~ Now checks md5 for "No Image"
   * ~~Attempt rolling back 10mins at a time.~~
   * Tune rollback attempts. Currently set to 3.
   * Pass number of attempts on the command line.
 * 404 should fail but be handled better
-* Remove globals
 * Support for JPEG output
 * Custom output file name
-* Option to save intermediate images
-* Comments
-* Reorder types, functions, vars
+* Option to save intermediate Tile images
 * Unit tests
-  * readImage to test drawing with local files
-* Debug logging mode?
-* Consistent use of terminology: A tile is drawn to produce an image
+* Debug logging
+* Consider using https://github.com/pkg/errors
 * Cropping functionality
   * Just crop image before writing
   * Improve by skipping downloads for images that aren't needed.
-* Create helper for URL construction (unit tested)
-  * 404 error test
-  * No Image test
 * Measure performance
 * Percentage completion in-line?
 * Download speed in-line
 * Summarise output image: location, file size, dimensions, format, cropping?
-* --help override? If possible, add examples.
-* Reorder flags
+* Support for getting only a specific light band e.g.
+	<img src="http://i.imgur.com/lY8hhEs.png">

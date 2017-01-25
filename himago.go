@@ -17,7 +17,7 @@ import (
 	"os"
 )
 
-// getTile will send a GET request to url and decode the response into an image
+// GetTile will send a GET request to url and decode the response into an image
 // using image.Decode.
 // It returns an image.Image and any error encountered.
 func GetTile(url string) (Tile, error) {
@@ -61,6 +61,9 @@ func GetTile(url string) (Tile, error) {
 func urlFromSatTime(t SatTime, gridWidth, i, j int) string {
 	urlString := "http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
 
+	// TODO: The below returns an image at a specific "band" 01-16.
+	//urlString := "http://himawari8-dl.nict.go.jp/himawari8/img/FULL_24h/B01/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
+
 	return fmt.Sprintf(urlString,
 		gridWidth,
 		t.Year(),
@@ -74,8 +77,8 @@ func urlFromSatTime(t SatTime, gridWidth, i, j int) string {
 
 }
 
-// Retrieve all the individual tiles to construct an image at the
-// required zoom.
+// GetTiles retrieves the individual tiles to construct an image at the
+// required zoom level.
 // Tiles are always the same size: 550x550 pixels
 // A higher zoom will require more tiles to be downloaded and will
 // produce a higher resolution image.
@@ -116,7 +119,7 @@ func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
 			if firstTile {
 				for remainingRollbacks > 0 {
 					if tile.IsNoImage() {
-						fmt.Println("OMG, I've found one!")
+						fmt.Println("Bad image, rolling back.")
 						imageTime.Rollback()
 
 						// Regenerate the URL will the new time
@@ -142,6 +145,7 @@ func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
 
 }
 
+// DrawTiles takes a collection of Tiles and writes them to file.
 func DrawTiles(tiles [][]Tile, outImg draw.Image) error {
 	outFile, err := os.Create("./output.png")
 	if err != nil {
@@ -153,17 +157,18 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image) error {
 	// Assume images are always square
 	gridWidth := len(tiles)
 
+	// Create a new image with a black background
 	outImg = image.NewRGBA(image.Rect(0, 0, gridWidth*w, gridWidth*w))
-
-	// Black background
 	draw.Draw(outImg, outImg.Bounds(), image.White, image.ZP, draw.Src)
 
+	// Loop over the Tiles and Draw them
 	for x := 0; x < gridWidth; x++ {
 		for y := 0; y < gridWidth; y++ {
 			draw.Draw(outImg, image.Rect(x*w, y*w, (x+1)*w, (y+1)*w), image.Image(tiles[x][y]), image.ZP, draw.Src)
 		}
 	}
 
+	// Write the image to file
 	err = png.Encode(outFile, outImg)
 	if err != nil {
 		return err

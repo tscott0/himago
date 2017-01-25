@@ -1,7 +1,6 @@
 package himago
 
 import (
-	"fmt"
 	"math"
 	"time"
 )
@@ -17,7 +16,6 @@ type SatTime struct {
 // Existing multiples of 10 minutes will not be affected.
 func (t *SatTime) Round() {
 	newMins := int(10 * math.Floor(float64(t.Minute())/10))
-	fmt.Printf("Rounding to %v\n", newMins)
 
 	t.Time = time.Date(t.Year(),
 		t.Month(),
@@ -25,12 +23,9 @@ func (t *SatTime) Round() {
 		t.Hour(),
 		newMins,
 		0, 0, time.UTC)
-
-	fmt.Printf("Rounded to %v\n", t.Minute())
-
 }
 
-// Go back 10 minutes. Assumes that the time was previously a
+// Rollback 10 minutes. Assumes that the time was previously a
 // multiple of 10 minutes, which calling Round() guarantees.
 func (t *SatTime) Rollback() {
 	t.Time = t.Add(-10 * time.Minute)

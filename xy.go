@@ -28,7 +28,7 @@ func (c *Xy) Set(value string) error {
 	coords := strings.Split(value, "x")
 
 	if len(coords) != 2 {
-		return errors.New("Invalid coordinates.")
+		return errors.New("Invalid coordinates")
 	}
 
 	var err error
@@ -43,7 +43,7 @@ func (c *Xy) Set(value string) error {
 	}
 
 	if c.X < 0 || c.Y < 0 {
-		return errors.New("Coordinates cannot be negative.")
+		return errors.New("Coordinates cannot be negative")
 	}
 
 	return nil
