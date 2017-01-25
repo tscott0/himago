@@ -63,5 +63,4 @@ Zoom  Grid   Resolution
 * Percentage completion in-line?
 * Download speed in-line
 * Summarise output image: location, file size, dimensions, format, cropping?
-* Support for getting only a specific light band e.g.
-	<img src="http://i.imgur.com/lY8hhEs.png">
+* Support for getting only a specific light band
