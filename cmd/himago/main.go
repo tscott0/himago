@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	himago "../../../himago"
+	"github.com/tscott0/himago"
 )
 
 var (
