@@ -1,4 +1,5 @@
-<img src="http://i.imgur.com/XBHi48b.png" width="50%">
+<img src="http://i.imgur.com/XBHi48b.png" width="100%">
+---
 Download high-resolution images taken by the [Himawari 8 satellite](https://en.wikipedia.org/wiki/Himawari_8). A command line tool written in Go.
 
 Images of the Asia-Pacific region taken by Himawari 8 can be viewed online at http://himawari8.nict.go.jp/. Each image of the Earth is composed of a grid of tiles, allowing the user to freely pan and zoom. Himago downloads all images and stitches them together.
