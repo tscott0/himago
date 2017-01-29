@@ -15,14 +15,22 @@ var (
 	imageTime himago.SatTime
 	outImg    draw.Image
 
-	now   = time.Now()
-	year  = flag.Int("year", now.Year(), "Year of the image")
-	month = flag.Int("month", int(now.Month()), "Month of the image")
-	day   = flag.Int("day", now.Day(), "Day of the image")
-	hour  = flag.Int("hour", now.Hour(), "Hour of the image")
-	min   = flag.Int("minute", now.Minute(), "Minute of the image")
+	now  = time.Now()
+	year = flag.Int("year", now.Year(),
+		"The year the image was taken e.g. 2016")
+	month = flag.Int("month", int(now.Month()),
+		"The month of the year the image was taken e.g. 5 means May")
+	day = flag.Int("day", now.Day(),
+		"The day of the month the image was taken e.g. 30")
+	hour = flag.Int("hour", now.Hour(),
+		"The hour the image was taken in 24-hour format e.g. 16 means 4pm")
+	min = flag.Int("minute", now.Minute(),
+		"The minute the image was taken.\n"+
+			"    \tReverts to last 10min multiple e.g. 15 becomes 10")
 
 	zoom = flag.Int("zoom", 2, "Zoom level 1-5")
+
+	bandURL himago.BandURL
 
 	//cropSize  himago.Xy
 	//cropStart himago.Xy
@@ -33,7 +41,15 @@ var (
 )
 
 func main() {
+	flag.Var(&bandURL, "band",
+		"Electromagnetic `band`. Accepts values 01,02...16 or \"standard\"\n"+
+			"    \tNumbers must be zero-padded (default \"standard\")")
+
 	flag.Parse()
+
+	if !bandURL.IsSet() {
+		bandURL.Set("standard")
+	}
 
 	// Construct a new time using the current time as the default.
 	// Override with values passed on the command line.
@@ -42,7 +58,7 @@ func main() {
 			0, 0, time.UTC),
 	}
 
-	tiles, err := himago.GetTiles(*zoom, imageTime)
+	tiles, err := himago.GetTiles(bandURL, *zoom, imageTime)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

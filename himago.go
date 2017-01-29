@@ -58,23 +58,18 @@ func GetTile(url string) (Tile, error) {
 
 // Take a SatTime and construct a URL.
 // Assumes that the time is valid.
-func urlFromSatTime(t SatTime, gridWidth, i, j int) string {
-	urlString := "http://himawari8-dl.nict.go.jp/himawari8/img/D531106/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
+func urlFromSatTime(url BandURL, t SatTime, gridWidth, i, j int) string {
+	fmt.Println(string(url))
 
-	// TODO: The below returns an image at a specific "band" 01-16.
-	//urlString := "http://himawari8-dl.nict.go.jp/himawari8/img/FULL_24h/B01/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
-
-	return fmt.Sprintf(urlString,
+	return fmt.Sprintf(string(url),
 		gridWidth,
 		t.Year(),
 		int(t.Month()),
 		t.Day(),
 		t.Hour(),
 		t.Minute(),
-		//00,
 		j,
 		i)
-
 }
 
 // GetTiles retrieves the individual tiles to construct an image at the
@@ -89,7 +84,7 @@ func urlFromSatTime(t SatTime, gridWidth, i, j int) string {
 // 3     4x4    2200 x 2200
 // 4     8x8    4400 x 4400
 // 5     16x16  8800 x 8800
-func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
+func GetTiles(bURL BandURL, zoom int, imageTime SatTime) ([][]Tile, error) {
 	gridWidth := int(math.Pow(2, float64(zoom-1)))
 
 	tiles := [][]Tile{}
@@ -107,7 +102,7 @@ func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
 		row := []Tile{}
 		for i := 0; i < gridWidth; i++ {
 
-			url := urlFromSatTime(imageTime, gridWidth, i, j)
+			url := urlFromSatTime(bURL, imageTime, gridWidth, i, j)
 			tile, err := GetTile(url)
 
 			if err != nil {
@@ -123,7 +118,7 @@ func GetTiles(zoom int, imageTime SatTime) ([][]Tile, error) {
 						imageTime.Rollback()
 
 						// Regenerate the URL will the new time
-						url = urlFromSatTime(imageTime, gridWidth, i, j)
+						url = urlFromSatTime(bURL, imageTime, gridWidth, i, j)
 						tile, err = GetTile(url)
 
 						if err != nil {
