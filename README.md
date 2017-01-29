@@ -50,7 +50,8 @@ Zoom  Grid   Resolution
   * Tune rollback attempts. Currently set to 3.
   * Pass number of attempts on the command line.
 * Make Zoom a type. Validate input with Flag interface.
-* Specific band images should have a black background, rather than transparent
+* Add more specific examples including for bands. Also include command used to generate it.
+* Ability to specify background colour when using specifying a band.
 * 404 should fail but be handled better
 * Support for JPEG output
 * Custom output file name

@@ -59,8 +59,6 @@ func GetTile(url string) (Tile, error) {
 // Take a SatTime and construct a URL.
 // Assumes that the time is valid.
 func urlFromSatTime(url BandURL, t SatTime, gridWidth, i, j int) string {
-	fmt.Println(string(url))
-
 	return fmt.Sprintf(string(url),
 		gridWidth,
 		t.Year(),
@@ -154,12 +152,12 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image) error {
 
 	// Create a new image with a black background
 	outImg = image.NewRGBA(image.Rect(0, 0, gridWidth*w, gridWidth*w))
-	draw.Draw(outImg, outImg.Bounds(), image.White, image.ZP, draw.Src)
+	draw.Draw(outImg, outImg.Bounds(), image.Black, image.ZP, draw.Src)
 
 	// Loop over the Tiles and Draw them
 	for x := 0; x < gridWidth; x++ {
 		for y := 0; y < gridWidth; y++ {
-			draw.Draw(outImg, image.Rect(x*w, y*w, (x+1)*w, (y+1)*w), image.Image(tiles[x][y]), image.ZP, draw.Src)
+			draw.Draw(outImg, image.Rect(x*w, y*w, (x+1)*w, (y+1)*w), image.Image(tiles[x][y]), image.ZP, draw.Over)
 		}
 	}
 
