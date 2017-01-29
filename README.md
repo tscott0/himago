@@ -1,3 +1,4 @@
+<img src="http://i.imgur.com/XBHi48b.png" width="50%">
 Download high-resolution images taken by the [Himawari 8 satellite](https://en.wikipedia.org/wiki/Himawari_8). A command line tool written in Go.
 
 Images of the Asia-Pacific region taken by Himawari 8 can be viewed online at http://himawari8.nict.go.jp/. Each image of the Earth is composed of a grid of tiles, allowing the user to freely pan and zoom. Himago downloads all images and stitches them together.
@@ -32,7 +33,38 @@ Zoom  Grid   Resolution
 * Bandwidth: The [JMA](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency) have made generously made these images freely available. While this tool might be useful for wallpapers, please don't abuse it by downloading hi-resolution images regularly. Please use responsinbly
 
 ## Examples
-<img src="http://i.imgur.com/w8dfDX5.jpg" width="50%"><img src="http://i.imgur.com/G5dK3YD.png" width="50%">
+With no arguments himago will get the most recent images with a default zoom of 2.
+```
+$ himago
+```
+<img src="http://i.imgur.com/trvX2su.png" width="50%">
+---
+Full colour image from 12PM
+```
+$ himago --zoom 1 -hour 12 --minute 29 --band 11 
+```
+<img src="http://i.imgur.com/mEeBerP.png" width="50%">
+---
+Full colour image from 6AM
+```
+$ himago --zoom 1 -hour 6 
+```
+<img src="http://i.imgur.com/FiSLobt.png" width="50%">
+---
+Band 11 at 12PM
+
+```
+$ himago --zoom 1 -hour 12
+```
+<img src="http://i.imgur.com/I2sppS2.png" width="50%">
+---
+Band 5 at 6AM
+```
+$ himago --zoom 1 -hour 06 --band 05
+```
+<img src="http://i.imgur.com/ZUDIktb.png" width="50%">
+---
+
 
 ## Acknowledgements
 * [Japan Meteorological Agency](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency)
@@ -67,3 +99,4 @@ Zoom  Grid   Resolution
 * Download speed in-line
 * Summarise output image: location, file size, dimensions, format, cropping?
 * Support for getting only a specific light band
+* Warp BandURL around an integer instead of a string
