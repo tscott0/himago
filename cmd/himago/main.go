@@ -2,12 +2,12 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"image/draw"
 	"os"
 	"time"
 
+	flag "github.com/ogier/pflag"
 	"github.com/tscott0/himago"
 )
 
@@ -20,15 +20,15 @@ var (
 	bandURL himago.BandURL
 
 	now  = time.Now()
-	year = flag.Int("year", now.Year(),
+	year = flag.IntP("year", "y", now.Year(),
 		"The year the image was taken e.g. 2016")
-	month = flag.Int("month", int(now.Month()),
+	month = flag.IntP("month", "m", int(now.Month()),
 		"The month of the year the image was taken e.g. 5 means May")
-	day = flag.Int("day", now.Day(),
+	day = flag.IntP("day", "d", now.Day(),
 		"The day of the month the image was taken e.g. 30")
-	hour = flag.Int("hour", now.Hour(),
+	hour = flag.IntP("hour", "h", now.Hour(),
 		"The hour the image was taken in 24-hour format e.g. 16 means 4pm")
-	min = flag.Int("minute", now.Minute(),
+	min = flag.IntP("minute", "i", now.Minute(),
 		"The minute the image was taken.\n"+
 			"    \tReverts to last 10min multiple e.g. 15 becomes 10")
 
@@ -43,10 +43,10 @@ var (
 )
 
 func main() {
-	flag.Var(&zoom, "zoom", "Zoom level 1-5")
-	flag.Var(&bandURL, "band",
-		"Electromagnetic `band`. Accepts values 01,02...16 or \"standard\"\n"+
-			"    \tNumbers must be zero-padded (default \"standard\")")
+	flag.VarP(&zoom, "zoom", "z", "Zoom level 1-5")
+	flag.VarP(&bandURL, "band", "b",
+		"Electromagnetic band. Accepts integers between 1 and 16 inclusive\n"+
+			"    \tIf zoom is not specified a full-colour image will be produced.")
 
 	flag.Parse()
 

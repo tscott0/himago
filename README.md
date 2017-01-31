@@ -77,7 +77,6 @@ $ himago --zoom 1 -hour 06 --band 05
 * Unrealistic colours: According to [Wikipedia](https://en.wikipedia.org/wiki/Himawari_8), the images returned are true-colour. Looking at the colour of Australia, in particular, the colours don't look accurate. Correcting the colour to make it appear more natural looks complicated.
 
 ## TODO
-* Integration with https://github.com/ogier/pflag for more standard flag usage
 * Pass number of rollback attempts on the command line. Maximum?
 * Add more specific examples including for bands. Also include command used to generate it.
 * Ability to specify background colour when using specifying a band.
