@@ -15,6 +15,10 @@ var (
 	imageTime himago.SatTime
 	outImg    draw.Image
 
+	// Flags
+	zoom    himago.Zoom
+	bandURL himago.BandURL
+
 	now  = time.Now()
 	year = flag.Int("year", now.Year(),
 		"The year the image was taken e.g. 2016")
@@ -28,9 +32,7 @@ var (
 		"The minute the image was taken.\n"+
 			"    \tReverts to last 10min multiple e.g. 15 becomes 10")
 
-	zoom = flag.Int("zoom", 2, "Zoom level 1-5")
-
-	bandURL himago.BandURL
+	//zoom = flag.Int("zoom", 2, "Zoom level 1-5")
 
 	//cropSize  himago.Xy
 	//cropStart himago.Xy
@@ -41,14 +43,21 @@ var (
 )
 
 func main() {
+	flag.Var(&zoom, "zoom", "Zoom level 1-5")
 	flag.Var(&bandURL, "band",
 		"Electromagnetic `band`. Accepts values 01,02...16 or \"standard\"\n"+
 			"    \tNumbers must be zero-padded (default \"standard\")")
 
 	flag.Parse()
 
+	// Default values for custom flags aren't supported.
+	// Check whether flags are passed here and set defaults.
 	if !bandURL.IsSet() {
-		bandURL.Set("standard")
+		bandURL.Default()
+	}
+
+	if !zoom.IsSet() {
+		zoom.Default()
 	}
 
 	// Construct a new time using the current time as the default.
@@ -58,7 +67,7 @@ func main() {
 			0, 0, time.UTC),
 	}
 
-	tiles, err := himago.GetTiles(bandURL, *zoom, imageTime)
+	tiles, err := himago.GetTiles(bandURL, zoom, imageTime)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

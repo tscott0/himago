@@ -3,38 +3,18 @@ package himago
 import (
 	"errors"
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 // BandURL is a Sprintf formatted string representing the URL
 // needed to Get images in the specified light band.
-// Valid values include "standard" and numbers 01-16 and are defined
-// in the baseURLMap below.
+// Valid values include numbers 1-16
 type BandURL string
 
 var (
-	uRLPrefix string = "http://himawari8-dl.nict.go.jp/himawari8/img/"
-	uRLSuffix string = "/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
-
-	baseURLMap = map[string]string{
-		"standard": uRLPrefix + "D531106" + uRLSuffix,
-		"01":       uRLPrefix + "FULL_24h/B01" + uRLSuffix,
-		"02":       uRLPrefix + "FULL_24h/B02" + uRLSuffix,
-		"03":       uRLPrefix + "FULL_24h/B03" + uRLSuffix,
-		"04":       uRLPrefix + "FULL_24h/B04" + uRLSuffix,
-		"05":       uRLPrefix + "FULL_24h/B05" + uRLSuffix,
-		"06":       uRLPrefix + "FULL_24h/B06" + uRLSuffix,
-		"07":       uRLPrefix + "FULL_24h/B07" + uRLSuffix,
-		"08":       uRLPrefix + "FULL_24h/B08" + uRLSuffix,
-		"09":       uRLPrefix + "FULL_24h/B09" + uRLSuffix,
-		"10":       uRLPrefix + "FULL_24h/B10" + uRLSuffix,
-		"11":       uRLPrefix + "FULL_24h/B11" + uRLSuffix,
-		"12":       uRLPrefix + "FULL_24h/B12" + uRLSuffix,
-		"13":       uRLPrefix + "FULL_24h/B13" + uRLSuffix,
-		"14":       uRLPrefix + "FULL_24h/B14" + uRLSuffix,
-		"15":       uRLPrefix + "FULL_24h/B15" + uRLSuffix,
-		"16":       uRLPrefix + "FULL_24h/B16" + uRLSuffix,
-	}
+	uRLPrefix  = "http://himawari8-dl.nict.go.jp/himawari8/img/"
+	uRLSuffix  = "/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
+	defaultURL = uRLPrefix + "D531106" + uRLSuffix
 )
 
 // String returns BandURL as a string. Nothing to see here.
@@ -43,25 +23,24 @@ func (b *BandURL) String() string {
 }
 
 // Set will lookup a band and set BandURL for that band.
-// e.g. a key of "03" will set the value to be
+// e.g. a band of "3" will set the value to be
 // "http://himawari8-dl.nict.go.jp/himawari8/img/FULL_24H/B03/%vd/550/%02d/%02d/%02d/%02d%02d00_%v_%v.png"
-// Assumes zero-padding for numbers. Passing "01" will work but "1" will not.
-func (b *BandURL) Set(key string) error {
-	// Ensure lookups are down with lowercase string
-	// Only applies to "standard" for now
-	key = strings.ToLower(key)
+func (b *BandURL) Set(flag string) error {
+	errMsg := "Band must be an integer between 1 and 16 inclusive"
 
-	fmt.Println("key: " + key)
+	// Attempt to cast to int
+	band, err := strconv.Atoi(flag)
 
-	// Check that the value passed exists or return an error
-	if val, ok := baseURLMap[key]; ok {
-		bURL := BandURL(val)
-		fmt.Println("val: " + val)
-		*b = bURL
-		fmt.Println("b:   " + string(*b))
-	} else {
-		return errors.New("Invalid band. Received \"" + key + "\"")
+	// If it's not an integer or isn't between 1 and 5 (inclusive) error
+	if err != nil || band < 1 || band > 16 {
+		return errors.New(errMsg)
 	}
+
+	// Create string with zero-padding e.g. FULL_24h/B12
+	bandString := fmt.Sprintf("FULL_24h/B%02d", band)
+
+	// Construct the full string
+	*b = BandURL(uRLPrefix + bandString + uRLSuffix)
 
 	return nil
 }
@@ -70,4 +49,10 @@ func (b *BandURL) Set(key string) error {
 // If the underlying string is "" then return false.
 func (b *BandURL) IsSet() bool {
 	return string(*b) != ""
+}
+
+// Default sets the BandURL to the default value
+// Calling Default is required IsSet returns false
+func (b *BandURL) Default() {
+	*b = BandURL(defaultURL)
 }

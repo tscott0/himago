@@ -34,12 +34,12 @@ func (c *Xy) Set(value string) error {
 	var err error
 	c.X, err = strconv.Atoi(coords[0])
 	if err != nil {
-		return errors.New("X was an invalid number. Received: " + value)
+		return errors.New("X was an invalid integer")
 	}
 
 	c.Y, err = strconv.Atoi(coords[1])
 	if err != nil {
-		return errors.New("Y was an invalid number. Received: " + value)
+		return errors.New("Y was an invalid integer")
 	}
 
 	if c.X < 0 || c.Y < 0 {

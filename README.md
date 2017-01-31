@@ -9,7 +9,7 @@ Images of the Asia-Pacific region taken by Himawari 8 can be viewed online at ht
 Built with Go version 1.7.3
 
 ```
-$ git clone https://github.com/tscott0/himago.git 
+$ git clone https://github.com/tscott0/himago.git
 $ cd himago
 $ go build -o himago cmd/himago/main.go
 ```
@@ -42,13 +42,13 @@ $ himago
 ---
 Full colour image from 12PM
 ```
-$ himago --zoom 1 -hour 12 --minute 29 --band 11 
+$ himago --zoom 1 -hour 12 --minute 29 --band 11
 ```
 <img src="http://i.imgur.com/mEeBerP.png" width="50%">
 ---
 Full colour image from 6AM
 ```
-$ himago --zoom 1 -hour 6 
+$ himago --zoom 1 -hour 6
 ```
 <img src="http://i.imgur.com/FiSLobt.png" width="50%">
 ---
@@ -77,12 +77,8 @@ $ himago --zoom 1 -hour 06 --band 05
 * Unrealistic colours: According to [Wikipedia](https://en.wikipedia.org/wiki/Himawari_8), the images returned are true-colour. Looking at the colour of Australia, in particular, the colours don't look accurate. Correcting the colour to make it appear more natural looks complicated.
 
 ## TODO
-* Handling of "No Image" images
-  * ~~Could check hash of image~~ Now checks md5 for "No Image"
-  * ~~Attempt rolling back 10mins at a time.~~
-  * Tune rollback attempts. Currently set to 3.
-  * Pass number of attempts on the command line.
-* Make Zoom a type. Validate input with Flag interface.
+* Integration with https://github.com/ogier/pflag for more standard flag usage
+* Pass number of rollback attempts on the command line. Maximum?
 * Add more specific examples including for bands. Also include command used to generate it.
 * Ability to specify background colour when using specifying a band.
 * 404 should fail but be handled better
@@ -99,5 +95,3 @@ $ himago --zoom 1 -hour 06 --band 05
 * Percentage completion in-line?
 * Download speed in-line
 * Summarise output image: location, file size, dimensions, format, cropping?
-* Support for getting only a specific light band
-* Warp BandURL around an integer instead of a string

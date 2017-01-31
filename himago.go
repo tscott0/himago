@@ -12,7 +12,6 @@ import (
 	"image/draw"
 	"image/png"
 	"io/ioutil"
-	"math"
 	"net/http"
 	"os"
 )
@@ -82,8 +81,8 @@ func urlFromSatTime(url BandURL, t SatTime, gridWidth, i, j int) string {
 // 3     4x4    2200 x 2200
 // 4     8x8    4400 x 4400
 // 5     16x16  8800 x 8800
-func GetTiles(bURL BandURL, zoom int, imageTime SatTime) ([][]Tile, error) {
-	gridWidth := int(math.Pow(2, float64(zoom-1)))
+func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
+	gridWidth := zoom.GridWidth()
 
 	tiles := [][]Tile{}
 
