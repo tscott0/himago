@@ -16,6 +16,8 @@ import (
 	"os"
 )
 
+const defaultTileSize = 550
+
 // GetTile will send a GET request to url and decode the response into an image
 // using image.Decode.
 // It returns an image.Image and any error encountered.
@@ -144,19 +146,29 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string) error {
 		return err
 	}
 
-	w := 550
-
 	// Assume images are always square
 	gridWidth := len(tiles)
 
 	// Create a new image with a black background
-	outImg = image.NewRGBA(image.Rect(0, 0, gridWidth*w, gridWidth*w))
+	imgRect := image.Rect(0, 0, gridWidth*defaultTileSize, gridWidth*defaultTileSize)
+	outImg = image.NewRGBA(imgRect)
 	draw.Draw(outImg, outImg.Bounds(), image.Black, image.ZP, draw.Src)
 
 	// Loop over the Tiles and Draw them
 	for x := 0; x < gridWidth; x++ {
 		for y := 0; y < gridWidth; y++ {
-			draw.Draw(outImg, image.Rect(x*w, y*w, (x+1)*w, (y+1)*w), image.Image(tiles[x][y]), image.ZP, draw.Over)
+			// Define the bounds of the image.Rectangle for this Tile
+			tileRect := image.Rect(
+				x*defaultTileSize,
+				y*defaultTileSize,
+				(x+1)*defaultTileSize,
+				(y+1)*defaultTileSize)
+			// Draw the Tile to the Image
+			draw.Draw(outImg,
+				tileRect,
+				image.Image(tiles[x][y]),
+				image.ZP,
+				draw.Over)
 		}
 	}
 

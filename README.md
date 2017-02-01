@@ -77,20 +77,22 @@ $ himago --zoom 1 -hour 06 --band 05
 * Unrealistic colours: According to [Wikipedia](https://en.wikipedia.org/wiki/Himawari_8), the images returned are true-colour. Looking at the colour of Australia, in particular, the colours don't look accurate. Correcting the colour to make it appear more natural looks complicated.
 
 ## TODO
+
+### New features
 * Pass number of rollback attempts on the command line. Maximum?
-* Add more specific examples including for bands. Also include command used to generate it.
 * Ability to specify background colour when using specifying a band.
-* 404 should fail but be handled better
-* Support for JPEG output
-* Custom output file name
-* Option to save intermediate Tile images
-* Unit tests
-* Debug logging
-* Consider using https://github.com/pkg/errors
-* Cropping functionality
-  * Just crop image before writing
-  * Improve by skipping downloads for images that aren't needed.
-* Measure performance
+* JPEG output format (inferred from filename -o)
 * Percentage completion in-line?
 * Download speed in-line
 * Summarise output image: location, file size, dimensions, format, cropping?
+* Cropping functionality
+  * Just crop image before writing
+* Option to save intermediate Tile images
+  * Improve by skipping downloads for images that aren't needed.
+
+### Bugs/improvements/other
+* 404 should fail but be handled better
+* Unit tests
+* Debug logging
+* Consider using https://github.com/pkg/errors
+* Measure performance
