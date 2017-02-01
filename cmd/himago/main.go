@@ -32,7 +32,7 @@ var (
 		"The minute the image was taken.\n"+
 			"    \tReverts to last 10min multiple e.g. 15 becomes 10")
 
-	//zoom = flag.Int("zoom", 2, "Zoom level 1-5")
+	outFile = flag.StringP("output", "o", "output.png", "The name of the file to write to.")
 
 	//cropSize  himago.Xy
 	//cropStart himago.Xy
@@ -47,6 +47,17 @@ func main() {
 	flag.VarP(&bandURL, "band", "b",
 		"Electromagnetic band. Accepts integers between 1 and 16 inclusive\n"+
 			"    \tIf zoom is not specified a full-colour image will be produced.")
+
+	// Override usage to be more unix-like
+	flag.Usage = func() {
+		// TODO print POSIX style usage e.g.
+		//usage: git [--version] [--help] [-C <path>] [-c name=value]
+		//[--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+		//[-p | --paginate | --no-pager] [--no-replace-objects] [--bare]
+		//[--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
+		//<command> [<args>]
+		flag.PrintDefaults()
+	}
 
 	flag.Parse()
 
@@ -73,7 +84,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = himago.DrawTiles(tiles, outImg)
+	err = himago.DrawTiles(tiles, outImg, *outFile)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)

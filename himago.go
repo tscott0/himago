@@ -138,8 +138,8 @@ func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 }
 
 // DrawTiles takes a collection of Tiles and writes them to file.
-func DrawTiles(tiles [][]Tile, outImg draw.Image) error {
-	outFile, err := os.Create("./output.png")
+func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string) error {
+	outFile, err := os.Create(fileName)
 	if err != nil {
 		return err
 	}
