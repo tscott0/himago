@@ -50,12 +50,11 @@ func main() {
 
 	// Override usage to be more unix-like
 	flag.Usage = func() {
-		// TODO print POSIX style usage e.g.
-		//usage: git [--version] [--help] [-C <path>] [-c name=value]
-		//[--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
-		//[-p | --paginate | --no-pager] [--no-replace-objects] [--bare]
-		//[--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
-		//<command> [<args>]
+		usage := `usage: himago [--help] [-z zoom] [-b band] [-o output_file]
+              [-y year] [-m month] [-d day] [-h hour] [-m minute] [-s second]`
+		fmt.Printf("%v\n\n", usage)
+
+		// Finally print all flags with shortforms in alphabetical order
 		flag.PrintDefaults()
 	}
 

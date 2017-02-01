@@ -89,6 +89,7 @@ $ himago --zoom 1 -hour 06 --band 05
   * Just crop image before writing
 * Option to save intermediate Tile images
   * Improve by skipping downloads for images that aren't needed.
+* --version
 
 ### Bugs/improvements/other
 * 404 should fail but be handled better
