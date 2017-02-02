@@ -80,7 +80,6 @@ $ himago --zoom 1 -hour 06 --band 05
 
 ### New features
 * Pass number of rollback attempts on the command line. Maximum?
-* Ability to specify background colour when using specifying a band.
 * JPEG output format (inferred from filename -o)
 * Percentage completion in-line?
 * Download speed in-line

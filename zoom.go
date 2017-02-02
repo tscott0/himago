@@ -6,7 +6,16 @@ import (
 	"strconv"
 )
 
-// Zoom is an int restricted to numbers 1-5 inclusive
+// Zoom is an int restricted to numbers 1-5 inclusive.
+// A higher zoom produces a larger image but requires
+// many more Tiles to be downloaded.
+//
+//   Zoom  Grid   Tiles  Resolution
+//   1     1x1    1      550  x 550
+//   2     2x2    4      1100 x 1100
+//   3     4x4    16     2200 x 2200
+//   4     8x8    64     4400 x 4400
+//   5     16x16  256    8800 x 8800
 type Zoom int
 
 // String returns Zoom as a string
@@ -30,13 +39,6 @@ func (z *Zoom) Set(zoomString string) error {
 }
 
 // GridWidth returns the number of Tiles the image is square.
-//
-// Zoom  Grid   Resolution
-// 1     1x1    550  x 550
-// 2     2x2    1100 x 1100
-// 3     4x4    2200 x 2200
-// 4     8x8    4400 x 4400
-// 5     16x16  8800 x 8800
 func (z *Zoom) GridWidth() int {
 	return int(math.Pow(2, float64(*z-1)))
 }

@@ -1,5 +1,5 @@
 // Package himago provides functions to download images ultimately coming from the
-// Himawari 8 satellite. Multiple smaller images, referred to as tiles, are stitched
+// Himawari 8 satellite. Multiple smaller images, Tiles, are downloaded and stitched
 // together to produce a single large image.
 package himago
 
@@ -73,16 +73,6 @@ func urlFromSatTime(url BandURL, t SatTime, gridWidth, i, j int) string {
 
 // GetTiles retrieves the individual tiles to construct an image at the
 // required zoom level.
-// Tiles are always the same size: 550x550 pixels
-// A higher zoom will require more tiles to be downloaded and will
-// produce a higher resolution image.
-//
-// Zoom  Grid   Resolution
-// 1     1x1    550  x 550
-// 2     2x2    1100 x 1100
-// 3     4x4    2200 x 2200
-// 4     8x8    4400 x 4400
-// 5     16x16  8800 x 8800
 func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 	gridWidth := zoom.GridWidth()
 
@@ -140,7 +130,7 @@ func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 }
 
 // DrawTiles takes a collection of Tiles and writes them to file.
-func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string) error {
+func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg *image.Uniform) error {
 	outFile, err := os.Create(fileName)
 	if err != nil {
 		return err
@@ -152,7 +142,8 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string) error {
 	// Create a new image with a black background
 	imgRect := image.Rect(0, 0, gridWidth*defaultTileSize, gridWidth*defaultTileSize)
 	outImg = image.NewRGBA(imgRect)
-	draw.Draw(outImg, outImg.Bounds(), image.Black, image.ZP, draw.Src)
+
+	draw.Draw(outImg, outImg.Bounds(), bg, image.ZP, draw.Src)
 
 	// Loop over the Tiles and Draw them
 	for x := 0; x < gridWidth; x++ {
