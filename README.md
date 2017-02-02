@@ -91,6 +91,7 @@ $ himago --zoom 1 -hour 06 --band 05
 * --version
 
 ### Bugs/improvements/other
+* Add colour examples to README
 * 404 should fail but be handled better
 * Unit tests
 * Debug logging

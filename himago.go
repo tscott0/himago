@@ -164,12 +164,13 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg *image.Uni
 	}
 
 	// Write the image to file
+	//err = jpeg.Encode(outFile, outImg, &jpeg.Options{90})
 	err = png.Encode(outFile, outImg)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Saved to output.png")
+	fmt.Printf("\nSaved to %v\n", fileName)
 
 	return nil
 }
