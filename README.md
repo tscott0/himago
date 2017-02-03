@@ -25,6 +25,36 @@ $ go build -o himago cmd/himago/main.go
 
 ## Usage
 
+```
+usage: himago [--help] [-z zoom] [-b band] [-o output_file]
+              [-y year] [-m month] [-d day] [-h hour] [-m minute] [-s second]
+
+  -b, --band value
+    	Electromagnetic band. Accepts integers between 1 and 16 inclusive
+    	If a band is not specified a full-colour image will be produced.
+  -B, --blue int
+    	(0-255) Blue level for background color
+  -d, --day int
+    	The day of the month the image was taken e.g. 30 (default 3)
+  -G, --green int
+    	(0-255) Green level for background color
+  -h, --hour int
+    	The hour the image was taken in 24-hour format e.g. 16 means 4pm (default 19)
+  -i, --minute int
+    	The minute the image was taken.
+    	Reverts to last 10min multiple e.g. 15 becomes 10 (default 22)
+  -m, --month int
+    	The month of the year the image was taken e.g. 5 means May (default 2)
+  -o, --output string
+    	The name of the file to write to (default "output.png")
+  -R, --red int
+    	(0-255) Red level for background color
+  -y, --year int
+    	The year the image was taken e.g. 2016 (default 2017)
+  -z, --zoom value
+    	Zoom level 1-5 (default )
+```
+
 ### Zoom
 ```
 Zoom  Grid   Resolution

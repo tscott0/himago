@@ -6,7 +6,6 @@ package himago
 import (
 	"bytes"
 	"crypto/md5"
-	"errors"
 	"fmt"
 	"image"
 	"image/draw"
@@ -18,16 +17,16 @@ import (
 
 const defaultTileSize = 550
 
-// GetTile will send a GET request to url and decode the response into an image
+// downloadTile will send a GET request to url and decode the response into an image
 // using image.Decode.
 // It returns an image.Image and any error encountered.
-func GetTile(url string) (Tile, error) {
+func downloadTile(url string) (Tile, error) {
 	fmt.Printf("Downloading %v\n", url)
 	var tile Tile
 
 	response, err := http.Get(url)
 	if err != nil {
-		return tile, errors.New("Failed to get image from: " + url)
+		return tile, err
 	}
 
 	defer func() {
@@ -40,7 +39,7 @@ func GetTile(url string) (Tile, error) {
 	// Extract the response body so we can hash it
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return tile, errors.New("Failed to read image body")
+		return tile, err
 	}
 
 	// Store the hex md5sum
@@ -49,7 +48,7 @@ func GetTile(url string) (Tile, error) {
 	//newImg, _, err := image.Decode(response.Body)
 	newImg, _, err := image.Decode(bytes.NewReader(body))
 	if err != nil {
-		return tile, errors.New("Failed to read decode image from url: " + url)
+		return tile, err
 	}
 
 	// Finally wrap the image.Image in a Tile and return it
@@ -92,7 +91,7 @@ func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 		for i := 0; i < gridWidth; i++ {
 
 			url := urlFromSatTime(bURL, imageTime, gridWidth, i, j)
-			tile, err := GetTile(url)
+			tile, err := downloadTile(url)
 
 			if err != nil {
 				return tiles, err
@@ -108,7 +107,7 @@ func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 
 						// Regenerate the URL will the new time
 						url = urlFromSatTime(bURL, imageTime, gridWidth, i, j)
-						tile, err = GetTile(url)
+						tile, err = downloadTile(url)
 
 						if err != nil {
 							return tiles, err
