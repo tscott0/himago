@@ -1,10 +1,19 @@
 <img src="http://i.imgur.com/XBHi48b.png" width="100%">
+[![GoDoc](https://godoc.org/github.com/tscott0/himago?status.svg)](https://godoc.org/github.com/tscott0/himago) [![Go Report Card](https://goreportcard.com/badge/github.com/tscott0/himago)](https://goreportcard.com/report/github.com/tscott0/himago) [![Build Status](https://travis-ci.org/tscott0/himago.svg?branch=master)](https://travis-ci.org/tscott0/himago)
 ---
 Download high-resolution images taken by the [Himawari 8 satellite](https://en.wikipedia.org/wiki/Himawari_8). A command line tool written in Go.
 
-Images of the Asia-Pacific region taken by Himawari 8 can be viewed online at http://himawari8.nict.go.jp/. Each image of the Earth is composed of a grid of tiles, allowing the user to freely pan and zoom. Himago downloads all images and stitches them together.
+## Overview 
 
-## Building
+Images of the Asia-Pacific region taken by Himawari 8 can be viewed online at http://himawari8.nict.go.jp/. Each image of the Earth is composed of a grid of Tiles, allowing the user to freely pan and zoom. Himago downloads all images and stitches them together.
+
+## Install
+
+```
+go get github.com/tscott0/himago
+```
+
+## Build
 
 Built with Go version 1.7.3
 
@@ -16,9 +25,6 @@ $ go build -o himago cmd/himago/main.go
 
 ## Usage
 
-```
-$ ./himago
-```
 ### Zoom
 ```
 Zoom  Grid   Resolution
@@ -31,7 +37,7 @@ Zoom  Grid   Resolution
 *Default zoom is 2*
 
 ### Considerations
-* Bandwidth: The [JMA](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency) have made generously made these images freely available. While this tool might be useful for wallpapers, please don't abuse it by downloading hi-resolution images regularly. Please use responsinbly
+* Bandwidth: The [JMA](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency) have made generously made these images freely available. While this tool might be useful for wallpapers, please don't abuse it by downloading hi-resolution images regularly. Please use responsinbly.
 
 ## Examples
 With no arguments himago will get the most recent images with a default zoom of 2.
@@ -75,6 +81,7 @@ $ himago --zoom 1 -hour 06 --band 05
 
 ## Known issues
 * Unrealistic colours: According to [Wikipedia](https://en.wikipedia.org/wiki/Himawari_8), the images returned are true-colour. Looking at the colour of Australia, in particular, the colours don't look accurate. Correcting the colour to make it appear more natural looks complicated.
+* Occasionally will get 404 errors. Himago doesn't handle these automatically so it would require the user to specify a different date or time.
 
 ## TODO
 
@@ -97,3 +104,7 @@ $ himago --zoom 1 -hour 06 --band 05
 * Debug logging
 * Consider using https://github.com/pkg/errors
 * Measure performance
+
+## License
+
+MIT.
