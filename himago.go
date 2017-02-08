@@ -33,7 +33,6 @@ func downloadTile(url string) (Tile, error) {
 		}
 	}()
 
-	//newImg, _, err := image.Decode(response.Body)
 	newImg, _, err := image.Decode(response.Body)
 	if err != nil {
 		return tile, err
