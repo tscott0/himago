@@ -1,9 +1,15 @@
 package himago
 
-import "image"
+import (
+	"bytes"
+	"crypto/md5"
+	"fmt"
+	"image"
+	"image/png"
+)
 
 // md5sum of a known bad image ("No Image")
-const noImageMD5 string = "b697574875d3b8eb5dd80e9b2bc9c749"
+const noImageMD5 string = "b5fd2ee42ee01da39dbd477e9fe981cb"
 
 // Tile wraps an image.Image and provides helper functions to detect
 // "no image" images.
@@ -11,11 +17,22 @@ const noImageMD5 string = "b697574875d3b8eb5dd80e9b2bc9c749"
 // Tiles are always the same size: 550x550 pixels
 type Tile struct {
 	image.Image
-	md5 string // The hex representation of the md5sum
 }
 
 // IsNoImage returns true if the md5sum of the image matches
-// the no image hash
+// the "No Image" hash.
 func (t *Tile) IsNoImage() bool {
-	return t.md5 == noImageMD5
+	md5sum := t.md5Sum()
+
+	return md5sum == noImageMD5
+}
+
+// md5Sum re-encodes the image as a PNG and returns the md5sum
+// of an image in hex format.
+func (t *Tile) md5Sum() string {
+	var b bytes.Buffer
+	png.Encode(&b, t.Image)
+
+	// Convert to hex for comparison
+	return fmt.Sprintf("%x", md5.Sum(b.Bytes()))
 }

@@ -4,13 +4,10 @@
 package himago
 
 import (
-	"bytes"
-	"crypto/md5"
 	"fmt"
 	"image"
 	"image/draw"
 	"image/png"
-	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -36,23 +33,14 @@ func downloadTile(url string) (Tile, error) {
 		}
 	}()
 
-	// Extract the response body so we can hash it
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return tile, err
-	}
-
-	// Store the hex md5sum
-	md5 := fmt.Sprintf("%x", md5.Sum(body))
-
 	//newImg, _, err := image.Decode(response.Body)
-	newImg, _, err := image.Decode(bytes.NewReader(body))
+	newImg, _, err := image.Decode(response.Body)
 	if err != nil {
 		return tile, err
 	}
 
 	// Finally wrap the image.Image in a Tile and return it
-	tile = Tile{newImg, md5}
+	tile = Tile{newImg}
 	return tile, nil
 }
 
