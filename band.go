@@ -37,9 +37,9 @@ var (
 	defaultURL = uRLPrefix + "D531106" + uRLSuffix
 )
 
-// String returns Band as a string. Nothing to see here.
+// String returns the Band int as a string. Nothing to see here.
 func (b *Band) String() string {
-	return string(int(*b))
+	return fmt.Sprintf("%v", *b)
 }
 
 // URL will build a URL string for the band
@@ -56,12 +56,13 @@ func (b *Band) URL() string {
 	}
 }
 
-// Set will lookup a band and set Band for that band.
+// Set will take the flag passed as a string and attempt to convert it
+// to an int. That int is used the set the value of the Band.
 func (b *Band) Set(flag string) error {
 	// Attempt to cast to int
 	band, err := strconv.Atoi(flag)
 
-	// If it's not an integer or isn't between 1 and 5 (inclusive) error
+	// If it's not an integer or isn't between 1 and 16 (inclusive) error
 	if err != nil || band < 1 || band > 16 {
 		return errors.New("Band must be an integer between 1 and 16 inclusive")
 	}
