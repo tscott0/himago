@@ -45,8 +45,8 @@ func downloadTile(url string) (Tile, error) {
 
 // Take a SatTime and construct a URL.
 // Assumes that the time is valid.
-func urlFromSatTime(url BandURL, t SatTime, gridWidth, i, j int) string {
-	return fmt.Sprintf(string(url),
+func urlFromSatTime(band Band, t SatTime, gridWidth, i, j int) string {
+	return fmt.Sprintf(band.URL(),
 		gridWidth,
 		t.Year(),
 		int(t.Month()),
@@ -59,7 +59,7 @@ func urlFromSatTime(url BandURL, t SatTime, gridWidth, i, j int) string {
 
 // GetTiles retrieves the individual tiles to construct an image at the
 // required zoom level.
-func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
+func GetTiles(band Band, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 	gridWidth := zoom.GridWidth()
 
 	tiles := [][]Tile{}
@@ -77,7 +77,7 @@ func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 		row := []Tile{}
 		for i := 0; i < gridWidth; i++ {
 
-			url := urlFromSatTime(bURL, imageTime, gridWidth, i, j)
+			url := urlFromSatTime(band, imageTime, gridWidth, i, j)
 			tile, err := downloadTile(url)
 
 			if err != nil {
@@ -93,7 +93,7 @@ func GetTiles(bURL BandURL, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 						imageTime.Rollback()
 
 						// Regenerate the URL will the new time
-						url = urlFromSatTime(bURL, imageTime, gridWidth, i, j)
+						url = urlFromSatTime(band, imageTime, gridWidth, i, j)
 						tile, err = downloadTile(url)
 
 						if err != nil {

@@ -31,7 +31,7 @@ var (
 			"    \tReverts to last 10min multiple e.g. 15 becomes 10")
 
 	zoom    himago.Zoom
-	bandURL himago.BandURL
+	band    himago.Band
 	outFile = flag.StringP("output", "o", "output.png", "The name of the file to write to")
 	red     = flag.IntP("red", "R", 0, "(0-255) Red level for background color")
 	green   = flag.IntP("green", "G", 0, "(0-255) Green level for background color")
@@ -47,7 +47,7 @@ var (
 
 func main() {
 	flag.VarP(&zoom, "zoom", "z", "Zoom level 1-5")
-	flag.VarP(&bandURL, "band", "b",
+	flag.VarP(&band, "band", "b",
 		"Electromagnetic band. Accepts integers between 1 and 16 inclusive\n"+
 			"    \tIf a band is not specified a full-colour image will be produced.")
 
@@ -64,9 +64,6 @@ func main() {
 
 	// Default values for custom flags aren't supported.
 	// Check whether flags are passed here and set defaults.
-	if !bandURL.IsSet() {
-		bandURL.Default()
-	}
 	if !zoom.IsSet() {
 		zoom.Default()
 	}
@@ -81,7 +78,7 @@ func main() {
 			0, 0, time.UTC),
 	}
 
-	tiles, err := himago.GetTiles(bandURL, zoom, imageTime)
+	tiles, err := himago.GetTiles(band, zoom, imageTime)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
