@@ -92,7 +92,7 @@ func TestZoomGridWidth(t *testing.T) {
 	for _, vz := range validZooms {
 		t.Run(vz.name, func(t *testing.T) {
 			var zoom Zoom
-			zoom.Set(vz.in)
+			_ = zoom.Set(vz.in)
 
 			width := zoom.GridWidth()
 
@@ -107,7 +107,7 @@ func TestZoomGridWidth(t *testing.T) {
 // true when the Zoom is non-zero.
 func TestZoomIsSetTrue(t *testing.T) {
 	var zoom Zoom
-	zoom.Set("1")
+	_ = zoom.Set("1")
 
 	if !zoom.IsSet() {
 		t.Errorf("Expected IsSet() to return true")

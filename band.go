@@ -50,10 +50,11 @@ func (b *Band) URL() string {
 
 	if int(*b) == 0 {
 		return defaultURL
-	} else {
-		// Construct the full URL and return it
-		return fmt.Sprintf("%sFULL_24h/B%02d%s", uRLPrefix, *b, uRLSuffix)
 	}
+
+	// Construct the full URL and return it
+	return fmt.Sprintf("%sFULL_24h/B%02d%s", uRLPrefix, *b, uRLSuffix)
+
 }
 
 // Set will take the flag passed as a string and attempt to convert it

@@ -31,7 +31,7 @@ func (t *Tile) IsNoImage() bool {
 // of an image in hex format.
 func (t *Tile) md5Sum() string {
 	var b bytes.Buffer
-	png.Encode(&b, t.Image)
+	_ = png.Encode(&b, t.Image)
 
 	// Convert to hex for comparison
 	return fmt.Sprintf("%x", md5.Sum(b.Bytes()))
