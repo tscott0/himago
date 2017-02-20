@@ -2,7 +2,7 @@ package himago
 
 import "testing"
 
-// TestString tests band.String() returns the band as a string.
+// TestBandString tests band.String() returns the band as a string.
 // The flag.Value interface requires a String() method.
 func TestBandString(t *testing.T) {
 	band := Band(0)

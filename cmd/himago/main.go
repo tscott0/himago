@@ -63,7 +63,7 @@ func main() {
 	flag.Parse()
 
 	// Default values for custom flags aren't supported.
-	// Check whether flags are passed here and set defaults.
+	// Override default values here if unset
 	if !zoom.IsSet() {
 		zoom.Default()
 	}

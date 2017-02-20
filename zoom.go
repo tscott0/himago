@@ -20,7 +20,7 @@ type Zoom int
 
 // String returns Zoom as a string
 func (z *Zoom) String() string {
-	return string(*z)
+	return strconv.Itoa(int(*z))
 }
 
 // Set will check the value of the zoom and error if invalid
@@ -45,6 +45,8 @@ func (z *Zoom) GridWidth() int {
 
 // IsSet returns true if the Zoom is the non-default value.
 // If the underlying int is 0 then return false.
+// Not strictly required but could be modified if Zoom became
+// a struct instead.
 func (z *Zoom) IsSet() bool {
 	return int(*z) != 0
 }
