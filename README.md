@@ -101,6 +101,32 @@ $ himago --zoom 1 -hour 06 --band 05
 ```
 <img src="http://i.imgur.com/ZUDIktb.png" width="50%">
 ---
+You can also specify coloured backgrounds for images using a specific band.
+
+Orange
+```
+$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 16 -R 243 -G 153 -B 4 && feh -F output.png
+```
+<img src="http://i.imgur.com/BR7A5CD.png" width="50%">
+---
+Blue
+```
+$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 8 -R 3 -G 178 -B 231 && feh -F output.png
+```
+<img src="http://i.imgur.com/duVV0r6.png" width="50%">
+---
+Red
+```
+$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 5 -R 229 -G 49 -B 32 && feh -F output.png
+```
+<img src="http://i.imgur.com/s6G3XMJ.jpg" width="50%">
+---
+Purple
+```
+$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 12 -R 146 -G 95 -B 152 && feh -F output.png
+```
+<img src="http://i.imgur.com/pXNcTZC.png" width="50%">
+---
 
 
 ## Acknowledgements
