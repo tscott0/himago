@@ -75,32 +75,42 @@ With no arguments himago will get the most recent images with a default zoom of 
 $ himago
 ```
 <img src="http://i.imgur.com/trvX2su.png" width="50%">
+
 ---
+
 Full colour image from 12PM
 ```
 $ himago --zoom 1 -hour 12 --minute 29 --band 11
 ```
 <img src="http://i.imgur.com/mEeBerP.png" width="50%">
+
 ---
+
 Full colour image from 6AM
 ```
 $ himago --zoom 1 -hour 6
 ```
 <img src="http://i.imgur.com/FiSLobt.png" width="50%">
+
 ---
+
 Band 11 at 12PM
 
 ```
 $ himago --zoom 1 -hour 12
 ```
 <img src="http://i.imgur.com/I2sppS2.png" width="50%">
+
 ---
+
 Band 5 at 6AM
 ```
 $ himago --zoom 1 -hour 06 --band 05
 ```
 <img src="http://i.imgur.com/ZUDIktb.png" width="50%">
+
 ---
+
 You can also specify coloured backgrounds for images using a specific band.
 
 Orange
@@ -108,24 +118,31 @@ Orange
 $ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 16 -R 243 -G 153 -B 4 && feh -F output.png
 ```
 <img src="http://i.imgur.com/BR7A5CD.png" width="50%">
+
 ---
+
 Blue
 ```
 $ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 8 -R 3 -G 178 -B 231 && feh -F output.png
 ```
 <img src="http://i.imgur.com/duVV0r6.png" width="50%">
+
 ---
+
 Red
 ```
 $ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 5 -R 229 -G 49 -B 32 && feh -F output.png
 ```
 <img src="http://i.imgur.com/s6G3XMJ.jpg" width="50%">
+
 ---
+
 Purple
 ```
 $ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 12 -R 146 -G 95 -B 152 && feh -F output.png
 ```
 <img src="http://i.imgur.com/pXNcTZC.png" width="50%">
+
 ---
 
 
