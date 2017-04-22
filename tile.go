@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"fmt"
 	"image"
-	"image/color"
 	"image/png"
 )
 
@@ -38,7 +37,7 @@ func (t *Tile) md5Sum() string {
 	return fmt.Sprintf("%x", md5.Sum(b.Bytes()))
 }
 
-func (t *Tile) funky() {
+func (t *Tile) setForeground(fg Color) {
 
 	new := image.NewRGBA(t.Bounds())
 
@@ -48,12 +47,13 @@ func (t *Tile) funky() {
 	for x := 0; x < maxX; x++ {
 		for y := 0; y < maxY; y++ {
 			currentPixel := t.At(x, y)
-			r, g, b, a := currentPixel.RGBA()
+			_, _, _, a := currentPixel.RGBA()
 
-			r, g, b = 249, 145, 87
-			//r, g, b = 0, 0, 0
+			// Default foreground has alpha 255 (no transparency)
+			// Set the alpha channel to match the existing pixel
+			fg.A = uint8(a)
 
-			new.Set(x, y, color.NRGBA{uint8(r), uint8(g), uint8(b), uint8(a)})
+			new.Set(x, y, fg)
 
 		}
 	}

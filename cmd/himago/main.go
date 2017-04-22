@@ -3,8 +3,6 @@ package main
 
 import (
 	"fmt"
-	"image"
-	"image/color"
 	"image/draw"
 	"os"
 	"time"
@@ -32,10 +30,9 @@ var (
 
 	zoom    himago.Zoom
 	band    himago.Band
+	bg      himago.Color
+	fg      himago.Color
 	outFile = flag.StringP("output", "o", "output.png", "The name of the file to write to")
-	red     = flag.IntP("red", "R", 0, "(0-255) Red level for background color")
-	green   = flag.IntP("green", "G", 0, "(0-255) Green level for background color")
-	blue    = flag.IntP("blue", "B", 0, "(0-255) Blue level for background color")
 
 	//cropSize  himago.Xy
 	//cropStart himago.Xy
@@ -51,6 +48,8 @@ func main() {
 		"Electromagnetic band. Accepts integers between 1 and 16 inclusive\n"+
 			"    \tIf a band is not specified a full-colour image will be produced.")
 
+	flag.VarP(&bg, "bg", "B", "The background colour")
+	flag.VarP(&fg, "fg", "F", "The foreground colour")
 	// Override usage to be more unix-like
 	flag.Usage = func() {
 		usage := `usage: himago [--help] [-z zoom] [-b band] [-o output_file]
@@ -68,9 +67,6 @@ func main() {
 		zoom.Default()
 	}
 
-	// Set the background colour
-	bg := image.NewUniform(color.RGBA{uint8(*red), uint8(*green), uint8(*blue), 255})
-
 	// Construct a new time using the current time as the default.
 	// Override with values passed on the command line.
 	imageTime := himago.SatTime{
@@ -85,7 +81,7 @@ func main() {
 	}
 
 	var outImg draw.Image
-	err = himago.DrawTiles(tiles, outImg, *outFile, bg)
+	err = himago.DrawTiles(tiles, outImg, *outFile, bg, fg)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)

@@ -104,7 +104,6 @@ func GetTiles(band Band, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 				}
 			}
 
-			tile.funky()
 			// Add the tile to the array
 			row = append(row, tile)
 			firstTile = false
@@ -117,7 +116,10 @@ func GetTiles(band Band, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 }
 
 // DrawTiles takes a collection of Tiles and writes them to file.
-func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg *image.Uniform) error {
+func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg Color, fg Color) error {
+	// Set the background colour
+	backdrop := image.NewUniform(bg)
+
 	outFile, err := os.Create(fileName)
 	if err != nil {
 		return err
@@ -130,7 +132,7 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg *image.Uni
 	imgRect := image.Rect(0, 0, gridWidth*defaultTileSize, gridWidth*defaultTileSize)
 	outImg = image.NewRGBA(imgRect)
 
-	draw.Draw(outImg, outImg.Bounds(), bg, image.ZP, draw.Src)
+	draw.Draw(outImg, outImg.Bounds(), backdrop, image.ZP, draw.Src)
 
 	// Loop over the Tiles and Draw them
 	for x := 0; x < gridWidth; x++ {
@@ -141,6 +143,9 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg *image.Uni
 				y*defaultTileSize,
 				(x+1)*defaultTileSize,
 				(y+1)*defaultTileSize)
+
+			tiles[x][y].setForeground(fg)
+
 			// Draw the Tile to the Image
 			draw.Draw(outImg,
 				tileRect,
