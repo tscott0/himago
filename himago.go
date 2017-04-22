@@ -104,6 +104,7 @@ func GetTiles(band Band, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 				}
 			}
 
+			tile.funky()
 			// Add the tile to the array
 			row = append(row, tile)
 			firstTile = false

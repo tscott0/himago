@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"image"
+	"image/color"
 	"image/png"
 )
 
@@ -35,4 +36,28 @@ func (t *Tile) md5Sum() string {
 
 	// Convert to hex for comparison
 	return fmt.Sprintf("%x", md5.Sum(b.Bytes()))
+}
+
+func (t *Tile) funky() {
+
+	new := image.NewRGBA(t.Bounds())
+
+	maxX := t.Bounds().Dx()
+	maxY := t.Bounds().Dy()
+
+	for x := 0; x < maxX; x++ {
+		for y := 0; y < maxY; y++ {
+			currentPixel := t.At(x, y)
+			r, g, b, a := currentPixel.RGBA()
+
+			r, g, b = 249, 145, 87
+			//r, g, b = 0, 0, 0
+
+			new.Set(x, y, color.NRGBA{uint8(r), uint8(g), uint8(b), uint8(a)})
+
+		}
+	}
+
+	t.Image = new.SubImage(t.Bounds())
+
 }
