@@ -38,30 +38,33 @@ usage: himago [--help] [-z zoom] [-b band] [-o output_file]
   -b, --band value
     	Electromagnetic band. Accepts integers between 1 and 16 inclusive
     	If a band is not specified a full-colour image will be produced.
-  -B, --blue int
-    	(0-255) Blue level for background color
+  -B, --bg value
+    	The background colour in hex format (default #000000,)
   -d, --day int
-    	The day of the month the image was taken e.g. 30 (default 3)
-  -G, --green int
-    	(0-255) Green level for background color
+    	The day of the month the image was taken e.g. 30 (default 29)
+  -F, --fg value
+    	The foreground colour in hex format (default #ffffff,)
   -h, --hour int
-    	The hour the image was taken in 24-hour format e.g. 16 means 4pm (default 19)
+    	The hour the image was taken in 24-hour format e.g. 16 means 4pm (default 15)
   -i, --minute int
     	The minute the image was taken.
-    	Reverts to last 10min multiple e.g. 15 becomes 10 (default 22)
+    	Reverts to last 10min multiple e.g. 15 becomes 10 (default 45)
   -m, --month int
-    	The month of the year the image was taken e.g. 5 means May (default 2)
+    	The month of the year the image was taken e.g. 5 means May (default 4)
   -o, --output string
     	The name of the file to write to (default "output.png")
-  -R, --red int
-    	(0-255) Red level for background color
   -y, --year int
     	The year the image was taken e.g. 2016 (default 2017)
   -z, --zoom value
-    	Zoom level 1-5 (default )
+    	Zoom level 1-5 (default 2)
+
 ```
 
 ### Zoom
+Changing the zoom level will alter the resolution of the image created. By default zoom level will be set to 2, producing 1100x1100 pixel image. Turning it up to 5 will produce a 8800x8800 pixel image or 77.4 megapixels. 
+
+The [JMA](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency) have made generously made these images freely available. While this tool might be useful for wallpapers, please don't abuse it by downloading hi-resolution images regularly.
+
 ```
 Zoom  Grid   Resolution
 1     1x1    550  x 550
@@ -70,11 +73,6 @@ Zoom  Grid   Resolution
 4     8x8    4400 x 4400
 5     16x16  8800 x 8800
 ```
-*Default zoom is 2*
-
-### Considerations
-* Bandwidth: The [JMA](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency) have made generously made these images freely available. While this tool might be useful for wallpapers, please don't abuse it by downloading hi-resolution images regularly. Please use responsinbly.
-
 
 ## Acknowledgements
 * [Japan Meteorological Agency](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency)

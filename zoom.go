@@ -42,17 +42,3 @@ func (z *Zoom) Set(zoomString string) error {
 func (z *Zoom) GridWidth() int {
 	return int(math.Pow(2, float64(*z-1)))
 }
-
-// IsSet returns true if the Zoom is the non-default value.
-// If the underlying int is 0 then return false.
-// Not strictly required but could be modified if Zoom became
-// a struct instead.
-func (z *Zoom) IsSet() bool {
-	return int(*z) != 0
-}
-
-// Default sets the BandURL to the default value
-// Calling Default is required IsSet returns false
-func (z *Zoom) Default() {
-	*z = Zoom(2)
-}

@@ -15,7 +15,7 @@ type Color struct {
 
 // String returns the color as a string
 func (c *Color) String() string {
-	return fmt.Sprintf("R%v G%v B%v A%v,", c.R, c.G, c.B, c.A)
+	return fmt.Sprintf("#%02x%02x%02x,", c.R, c.G, c.B)
 }
 
 // Set accepts a string of digits making a hex number.

@@ -116,7 +116,7 @@ func GetTiles(band Band, zoom Zoom, imageTime SatTime) ([][]Tile, error) {
 }
 
 // DrawTiles takes a collection of Tiles and writes them to file.
-func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg Color, fg Color) error {
+func DrawTiles(band Band, tiles [][]Tile, outImg draw.Image, fileName string, bg Color, fg Color) error {
 	// Set the background colour
 	backdrop := image.NewUniform(bg)
 
@@ -144,7 +144,11 @@ func DrawTiles(tiles [][]Tile, outImg draw.Image, fileName string, bg Color, fg 
 				(x+1)*defaultTileSize,
 				(y+1)*defaultTileSize)
 
-			tiles[x][y].setForeground(fg)
+			// Full colour images have no transparency
+			// Only set the foreground colour when using a band
+			if band != Band(0) {
+				tiles[x][y].setForeground(fg)
+			}
 
 			// Draw the Tile to the Image
 			draw.Draw(outImg,

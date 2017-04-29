@@ -43,13 +43,17 @@ var (
 )
 
 func main() {
+	// Set default values for custom flags
+	fg.Set("#FFFFFF")
+	zoom.Set("2")
+
 	flag.VarP(&zoom, "zoom", "z", "Zoom level 1-5")
 	flag.VarP(&band, "band", "b",
 		"Electromagnetic band. Accepts integers between 1 and 16 inclusive\n"+
 			"    \tIf a band is not specified a full-colour image will be produced.")
 
-	flag.VarP(&bg, "bg", "B", "The background colour")
-	flag.VarP(&fg, "fg", "F", "The foreground colour")
+	flag.VarP(&bg, "bg", "B", "The background colour in hex format")
+	flag.VarP(&fg, "fg", "F", "The foreground colour in hex format")
 	// Override usage to be more unix-like
 	flag.Usage = func() {
 		usage := `usage: himago [--help] [-z zoom] [-b band] [-o output_file]
@@ -60,12 +64,6 @@ func main() {
 	}
 
 	flag.Parse()
-
-	// Default values for custom flags aren't supported.
-	// Override default values here if unset
-	if !zoom.IsSet() {
-		zoom.Default()
-	}
 
 	// Construct a new time using the current time as the default.
 	// Override with values passed on the command line.
@@ -81,7 +79,7 @@ func main() {
 	}
 
 	var outImg draw.Image
-	err = himago.DrawTiles(tiles, outImg, *outFile, bg, fg)
+	err = himago.DrawTiles(band, tiles, outImg, *outFile, bg, fg)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)
