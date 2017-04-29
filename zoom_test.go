@@ -102,37 +102,3 @@ func TestZoomGridWidth(t *testing.T) {
 		})
 	}
 }
-
-// TestZoomIsSet checks that the boolan IsSet() returns
-// true when the Zoom is non-zero.
-func TestZoomIsSetTrue(t *testing.T) {
-	var zoom Zoom
-	_ = zoom.Set("1")
-
-	if !zoom.IsSet() {
-		t.Errorf("Expected IsSet() to return true")
-	}
-}
-
-// TestZoomIsSet checks that the boolan IsSet() returns
-// false when the Zoom is zero.
-func TestZoomIsSetFalse(t *testing.T) {
-	var zoom Zoom
-
-	if zoom.IsSet() {
-		t.Errorf("Expected IsSet() to return false")
-	}
-}
-
-// TestZoomDefault checks that the Zoom correctly initialises
-// to 2 when calling Default()
-func TestZoomDefault(t *testing.T) {
-	expected := 2
-
-	var zoom Zoom
-	zoom.Default()
-
-	if int(zoom) != expected {
-		t.Errorf("Expected \"%v\", received \"%v\"", expected, zoom)
-	}
-}
