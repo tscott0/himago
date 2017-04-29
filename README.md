@@ -1,4 +1,5 @@
-<img src="http://i.imgur.com/XBHi48b.png" width="100%">
+# himago
+
 [![GoDoc](https://godoc.org/github.com/tscott0/himago?status.svg)](https://godoc.org/github.com/tscott0/himago) [![Go Report Card](https://goreportcard.com/badge/github.com/tscott0/himago)](https://goreportcard.com/report/github.com/tscott0/himago) [![Build Status](https://travis-ci.org/tscott0/himago.svg?branch=master)](https://travis-ci.org/tscott0/himago)
 ---
 Download high-resolution images taken by the [Himawari 8 satellite](https://en.wikipedia.org/wiki/Himawari_8). A command line tool written in Go.
@@ -6,6 +7,13 @@ Download high-resolution images taken by the [Himawari 8 satellite](https://en.w
 ## Overview 
 
 Images of the Asia-Pacific region taken by Himawari 8 can be viewed online at http://himawari8.nict.go.jp/. Each image of the Earth is composed of a grid of Tiles, allowing the user to freely pan and zoom. Himago downloads all images and stitches them together.
+
+## Examples
+<img src="/_examples/arch.png?raw=true" width="25%"><img src="/_examples/b05-06.png?raw=true" width="25%"><img src="/_examples/b11-12.png?raw=true" width="25%"><img src="/_examples/blue.png?raw=true" width="25%">
+<img src="/_examples/current.png?raw=true" width="25%"><img src="/_examples/dominos.png?raw=true" width="25%"><img src="/_examples/facebook.png?raw=true" width="25%"><img src="/_examples/flickr.png?raw=true" width="25%">
+<img src="/_examples/gplus.png?raw=true" width="25%"><img src="/_examples/heineken.png?raw=true" width="25%"><img src="/_examples/ikea.png?raw=true" width="25%"><img src="/_examples/lego.png?raw=true" width="25%">
+<img src="/_examples/noband-12.png?raw=true" width="25%"><img src="/_examples/orange.png?raw=true" width="25%"><img src="/_examples/purple.png?raw=true" width="25%"><img src="/_examples/python.png?raw=true" width="25%">
+<img src="/_examples/red.png?raw=true" width="25%"><img src="/_examples/reddit.png?raw=true" width="25%"><img src="/_examples/rgb1.png?raw=true" width="25%">
 
 ## Install
 
@@ -15,12 +23,10 @@ go get github.com/tscott0/himago
 
 ## Build
 
-Built with Go version 1.7.3
-
 ```
 $ git clone https://github.com/tscott0/himago.git
-$ cd himago
-$ go build -o himago cmd/himago/main.go
+$ cd himago/cmd/himago/
+$ go build
 ```
 
 ## Usage
@@ -69,82 +75,6 @@ Zoom  Grid   Resolution
 ### Considerations
 * Bandwidth: The [JMA](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency) have made generously made these images freely available. While this tool might be useful for wallpapers, please don't abuse it by downloading hi-resolution images regularly. Please use responsinbly.
 
-## Examples
-With no arguments himago will get the most recent images with a default zoom of 2.
-```
-$ himago
-```
-<img src="http://i.imgur.com/trvX2su.png" width="50%">
-
----
-
-Full colour image from 12PM
-```
-$ himago --zoom 1 -hour 12 --minute 29 --band 11
-```
-<img src="http://i.imgur.com/mEeBerP.png" width="50%">
-
----
-
-Full colour image from 6AM
-```
-$ himago --zoom 1 -hour 6
-```
-<img src="http://i.imgur.com/FiSLobt.png" width="50%">
-
----
-
-Band 11 at 12PM
-
-```
-$ himago --zoom 1 -hour 12
-```
-<img src="http://i.imgur.com/I2sppS2.png" width="50%">
-
----
-
-Band 5 at 6AM
-```
-$ himago --zoom 1 -hour 06 --band 05
-```
-<img src="http://i.imgur.com/ZUDIktb.png" width="50%">
-
----
-
-You can also specify coloured backgrounds for images using a specific band.
-
-Orange
-```
-$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 16 -R 243 -G 153 -B 4 && feh -F output.png
-```
-<img src="http://i.imgur.com/BR7A5CD.png" width="50%">
-
----
-
-Blue
-```
-$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 8 -R 3 -G 178 -B 231 && feh -F output.png
-```
-<img src="http://i.imgur.com/duVV0r6.png" width="50%">
-
----
-
-Red
-```
-$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 5 -R 229 -G 49 -B 32 && feh -F output.png
-```
-<img src="http://i.imgur.com/s6G3XMJ.jpg" width="50%">
-
----
-
-Purple
-```
-$ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 12 -R 146 -G 95 -B 152 && feh -F output.png
-```
-<img src="http://i.imgur.com/pXNcTZC.png" width="50%">
-
----
-
 
 ## Acknowledgements
 * [Japan Meteorological Agency](https://en.wikipedia.org/wiki/Japan_Meteorological_Agency)
@@ -157,8 +87,6 @@ $ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 12 -R 146 -G 95 -B 152 &&
 * Occasionally will get 404 errors. Himago doesn't handle these automatically so it would require the user to specify a different date or time.
 
 ## TODO
-
-### New features
 * Pass number of rollback attempts on the command line. Maximum?
 * JPEG output format (inferred from filename -o)
 * Percentage completion in-line?
@@ -169,14 +97,10 @@ $ go run cmd/himago/main.go --month=1 --hour=0 -z 2 -b 12 -R 146 -G 95 -B 152 &&
 * Option to save intermediate Tile images
   * Improve by skipping downloads for images that aren't needed.
 * --version
-
-### Bugs/improvements/other
-* Add colour examples to README
 * 404 should fail but be handled better
-* Unit tests
-* Debug logging
 * Consider using https://github.com/pkg/errors
 * Measure performance
+
 
 ## License
 
