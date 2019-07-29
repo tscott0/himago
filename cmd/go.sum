@@ -1,0 +1,4 @@
+github.com/ogier/pflag v0.0.1 h1:RW6JSWSu/RkSatfcLtogGfFgpim5p7ARQ10ECk5O750=
+github.com/ogier/pflag v0.0.1/go.mod h1:zkFki7tvTa0tafRvTBIZTvzYyAu6kQhPZFnshFFPE+g=
+github.com/tscott0/himago v0.0.0-20170429154516-e46b8801789d h1:iGT1ku9TjoheNGfTY5pW5yK6JqxJX7p3sDVGeGVj9hU=
+github.com/tscott0/himago v0.0.0-20170429154516-e46b8801789d/go.mod h1:fDJEbkEF8CKCgeZNSiJVx6S+aXJPdke59YyJ2BRPduI=
